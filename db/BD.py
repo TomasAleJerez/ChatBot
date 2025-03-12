@@ -2,26 +2,38 @@ import sqlite3
 
 def obtener_conexion():
     """
-    Devuelve una nueva conexión a la base de datos.
+    Establece y devuelve una nueva conexión a la base de datos SQLite.
+
+    Returns:
+        sqlite3.Connection: Objeto de conexión a la base de datos .
     """
-    return sqlite3.connect("proyecto_final.db")
+    return sqlite3.connect("chatbot.db")
 
 def inicializar_bd():
     """
-    Crea la base de datos SQLite y las tablas necesarias.
+    Inicializa la base de datos SQLite creando las tablas necesarias para el funcionamiento del chatbot.
+    
+    Crea o reinicia las siguientes tablas:
+        - usuarios: Almacena la información de los usuarios registrados (ID, email, contraseña en hash).
+        - eventos: Almacena eventos creados por los usuarios (ID, ID del usuario, título, fecha de inicio, duración).
+
+    Si las tablas ya existen, se eliminan y se vuelven a crear.
+
+    Raises:
+        sqlite3.Error: Si ocurre un error al interactuar con la base de datos.
     """
     conexion = obtener_conexion()
     cursor = conexion.cursor()
 
     # Tabla de usuarios
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS usuarios (
+    cursor.execute("DROP TABLE IF EXISTS usuarios")
+    cursor.execute('''
+    CREATE TABLE usuarios (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        nombre TEXT NOT NULL,
-        email TEXT NOT NULL UNIQUE,
-        password TEXT NOT NULL
+        email TEXT UNIQUE NOT NULL,
+        password_hash TEXT NOT NULL
     )
-    """)
+    ''')
 
     # Tabla de eventos
     cursor.execute("""
@@ -41,7 +53,7 @@ def inicializar_bd():
     conn = sqlite3.connect("chatbot.db")  
     cursor = conn.cursor()
 
-    # Crear tabla de usuarios si no existe
+    # Crear tabla de usuarios si no existe (verificación adicional)
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS usuarios (
         id INTEGER PRIMARY KEY AUTOINCREMENT,

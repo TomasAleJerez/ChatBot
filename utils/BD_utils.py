@@ -1,7 +1,7 @@
 import sqlite3
 from passlib.hash import bcrypt
 
-from utils.validaciones import validar_email
+from .validaciones import validar_email
 
 def inicializar_bd():
     """
@@ -15,7 +15,18 @@ def inicializar_bd():
         CREATE TABLE IF NOT EXISTS usuarios (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nombre TEXT NOT NULL,
-            email TEXT UNIQUE NOT NULL
+            email TEXT UNIQUE NOT NULL,
+            password_hash TEXT NOT NULL
+        )
+    """)
+
+    # Crear tabla de eventos
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS eventos (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            titulo TEXT NOT NULL,
+            fecha TEXT NOT NULL,
+            descripcion TEXT
         )
     """)
 
@@ -23,11 +34,8 @@ def inicializar_bd():
     conn.close()
     print("✅ Base de datos inicializada correctamente.")
 
-    return conn  # Retorna la conexión a la BD
-
-
 def obtener_conexion():
-    return sqlite3.connect("proyecto_final.db")
+    return sqlite3.connect("chatbot.db")
 
 def alta_usuario(nombre, email, password):
     """
@@ -45,7 +53,7 @@ def alta_usuario(nombre, email, password):
         raise ValueError("El email ya está registrado.")
 
     password_hash = bcrypt.hash(password)
-    cursor.execute("INSERT INTO usuarios (nombre, email, password) VALUES (?, ?, ?)", (nombre, email, password_hash))
+    cursor.execute("INSERT INTO usuarios (nombre, email, password_hash) VALUES (?, ?, ?)", (nombre, email, password_hash))
     conexion.commit()
     conexion.close()
     return "Usuario registrado correctamente."
@@ -56,7 +64,7 @@ def autenticar_usuario(email, password):
     """
     conexion = obtener_conexion()
     cursor = conexion.cursor()
-    cursor.execute("SELECT id, nombre, password FROM usuarios WHERE email = ?", (email,))
+    cursor.execute("SELECT id, nombre, password_hash FROM usuarios WHERE email = ?", (email,))
     usuario = cursor.fetchone()
     conexion.close()
 
@@ -83,7 +91,7 @@ def modificar_usuario(id_usuario, nuevo_nombre, nuevo_email, nueva_password):
     password_hash = bcrypt.hash(nueva_password)
     cursor.execute("""
         UPDATE usuarios
-        SET nombre = ?, email = ?, password = ?
+        SET nombre = ?, email = ?, password_hash = ?
         WHERE id = ?
     """, (nuevo_nombre, nuevo_email, password_hash, id_usuario))
 
@@ -151,15 +159,12 @@ def modificar_evento(evento_id, nuevo_titulo, nueva_fecha, nueva_descripcion):
     conexion.close()
     return f"Evento con ID {evento_id} modificado correctamente."
 
-
-import sqlite3
-
 def ejecutar_consulta(query, params=()):
     """
     Ejecuta una consulta SQL en la base de datos.
     """
     try:
-        conexion = sqlite3.connect("base_de_datos.db")
+        conexion = sqlite3.connect("chatbot.db")
         cursor = conexion.cursor()
         cursor.execute(query, params)
         conexion.commit()
@@ -172,7 +177,7 @@ def obtener_datos(query, params=()):
     Obtiene datos de la base de datos.
     """
     try:
-        conexion = sqlite3.connect("base_de_datos.db")
+        conexion = sqlite3.connect("chatbot.db")
         cursor = conexion.cursor()
         cursor.execute(query, params)
         resultados = cursor.fetchall()

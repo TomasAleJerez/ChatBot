@@ -8,7 +8,7 @@ from services.youtube import YouTubeDownloader
 from services.whatsapp import WhatsappBot
 from services.telegram import TelegramBot
 from services.discord import DiscordBot
-from services.autenticacion import iniciar_sesion, registrar_usuario
+from services.autenticacion import iniciar_sesion, registrar_usuario, obtener_id_usuario
 from services.chatbotIA import ChatBot
 from utils.BD_utils import inicializar_bd
 
@@ -20,7 +20,13 @@ WHATSAPP_SID = os.getenv("WHATSAPP_SID")
 WHATSAPP_AUTH_TOKEN = os.getenv("WHATSAPP_AUTH_TOKEN")
 
 # Inicializar la base de datos y servicios
-db_conn = inicializar_bd()
+try:
+    db_conn = inicializar_bd()
+    print("✅ Base de datos inicializada correctamente.")
+except Exception as e:
+    print(f"⚠️ Error al inicializar la base de datos: {e}")
+    exit()
+
 recordatorios = GestorRecordatorios()
 chatbot = ChatBot()
 
@@ -35,14 +41,12 @@ except Exception as e:
 
 try:
     bots["telegram"] = TelegramBot(TOKEN_TELEGRAM)
-    bots["telegram"].run()
     print("✅ Bot de Telegram iniciado.")
 except Exception as e:
     print(f"⚠️ Error al iniciar Telegram Bot: {e}")
 
 try:
     bots["discord"] = DiscordBot(TOKEN_DISCORD)
-    bots["discord"].run()
     print("✅ Bot de Discord iniciado.")
 except Exception as e:
     print(f"⚠️ Error al iniciar Discord Bot: {e}")
@@ -72,13 +76,17 @@ def autenticar_usuario_con_reintentos():
     while intentos > 0:
         email = input("📧 Ingresa tu email: ").strip()
         password = input("🔑 Ingresa tu contraseña: ").strip()
-        usuario_id = iniciar_sesion(email, password)
 
-        if usuario_id:
-            print(f"👋 ¡Bienvenido, usuario {usuario_id}!")
-            return usuario_id
-        else:
-            print(f"❌ Credenciales incorrectas. Te quedan {intentos - 1} intentos.")
+        try:
+            usuario_id = iniciar_sesion(email, password)
+            if usuario_id:
+                print(f"👋 ¡Bienvenido, usuario {usuario_id}!")
+                return usuario_id
+            else:
+                print(f"❌ Credenciales incorrectas. Te quedan {intentos - 1} intentos.")
+                intentos -= 1
+        except Exception as e:
+            print(f"⚠️ Error al iniciar sesión: {e}")
             intentos -= 1
 
     print("🚫 Se agotaron los intentos.")
@@ -86,12 +94,17 @@ def autenticar_usuario_con_reintentos():
 
 def registrar_usuario_manual():
     """Solicita datos y registra un nuevo usuario"""
+    nombre = input("👤 Ingresa tu nombre: ").strip()
     email = input("📧 Ingresa tu email: ").strip()
     password = input("🔑 Ingresa tu contraseña: ").strip()
-    if registrar_usuario(email, password):
-        print("✅ Registro exitoso. Ahora inicia sesión.")
-        return autenticar_usuario_con_reintentos()
-    return None
+
+    try:
+        resultado = registrar_usuario(nombre, email, password)
+        print(resultado)
+        return obtener_id_usuario(email)  # Retorna el ID del usuario registrado
+    except ValueError as e:
+        print(f"Error: {e}")
+        return None
 
 def mostrar_menu():
     """Muestra el menú principal."""
@@ -106,7 +119,13 @@ def mostrar_menu():
     print("8️⃣ Salir")
 
 def gestionar_recordatorios():
-    """Gestión de recordatorios"""
+    """Gestión de recordatorios (añadir, listar, eliminar).
+    
+    Muestra un menú con las siguientes opciones:
+        - Añadir un recordatorio
+        - Mostrar todos los recordatorios
+        - Eliminar un recordatorio
+    """
     print("\n📅 **Gestión de Recordatorios**")
     print("1️⃣ Añadir un recordatorio")
     print("2️⃣ Mostrar todos los recordatorios")
@@ -129,14 +148,19 @@ def gestionar_recordatorios():
         print("⚠️ Opción no válida.")
 
 def descargar_youtube():
-    """Permite descargar videos o audios desde YouTube."""
+    """Permite descargar videos o audios desde YouTube
+    Solicita al usuario ingresar la URL del video y el formato de descarga (mp4 o mp3).
+    Muestra un mensaje con el resultado de la descarga.
+    ."""
     url = input("🔗 URL del video de YouTube: ").strip()
     formato = input("🎵 Formato (mp4/mp3): ").lower().strip()
     downloader = YouTubeDownloader()
     print(downloader.descargar_video(url, formato))
 
 def manejar_bots():
-    """Menú para manejar bots de WhatsApp, Telegram y Discord."""
+    """Menú para manejar bots de WhatsApp, Telegram y Discord.
+    El usuario puede enviar mensajes a través de cualquiera de estos bots según su disponibilidad.
+    """
     print("\n🤖 **Gestión de Bots**")
     print("1️⃣ WhatsApp")
     print("2️⃣ Telegram")
@@ -144,16 +168,25 @@ def manejar_bots():
 
     opcion = input("🔹 Elige una opción (1-3): ")
     if opcion == "1" and bots["whatsapp"]:
-        bots["whatsapp"].enviar_mensaje("+123456789", "Hola desde el chatbot!")
+        numero = input("📱 Ingresa el número de teléfono: ").strip()
+        mensaje = input("💬 Escribe el mensaje: ").strip()
+        bots["whatsapp"].enviar_mensaje(numero, mensaje)
     elif opcion == "2" and bots["telegram"]:
-        bots["telegram"].run()
+        mensaje = input("💬 Escribe el mensaje: ").strip()
+        bots["telegram"].enviar_mensaje(mensaje)
     elif opcion == "3" and bots["discord"]:
-        bots["discord"].run()
+        mensaje = input("💬 Escribe el mensaje: ").strip()
+        bots["discord"].enviar_mensaje(mensaje)
     else:
         print("⚠️ Bot no disponible o opción no válida.")
 
 def main():
-    """Función principal del asistente virtual."""
+    """Función principal del asistente virtual.
+    
+    - Inicializa la base de datos.
+    - Muestra el menú de autenticación.
+    - Permite al usuario seleccionar entre varias funcionalidades.
+    """
     print("🎉 ¡Bienvenido al Asistente Virtual!")
     usuario_id = menu_autenticacion()
     if usuario_id is None:

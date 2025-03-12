@@ -19,9 +19,6 @@ class ConvertidorMoneda:
             monto (float): Cantidad de dinero a convertir.
             moneda_origen (str): Código de la moneda de origen (ej. "USD").
             moneda_destino (str): Código de la moneda de destino (ej. "EUR").
-
-        Returns:
-            str: Resultado de la conversión o un mensaje de error.
         """
         if monto <= 0:
             return "❌ Error: El monto debe ser mayor que cero."

@@ -19,9 +19,6 @@ class GestorClima:
             ciudad (str): Nombre de la ciudad.
             unidades (str): Sistema de unidades ('metric', 'imperial', 'standard').
             lang (str): Idioma de la respuesta ('es', 'en', etc.).
-
-        Returns:
-            str: Descripción del clima o mensaje de error.
         """
         if not validar_nombre_ciudad(ciudad):
             return "Error: Nombre de ciudad inválido."

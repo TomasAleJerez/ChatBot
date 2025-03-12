@@ -15,7 +15,7 @@ documentation for details.
    :maxdepth: 2
    :caption: Contents:
 
-   doc1
+   modules
 
    Indices y tablas
 ================

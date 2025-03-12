@@ -7,15 +7,32 @@ from discord.ext import commands
 TOKEN = "TU_DISCORD_BOT_TOKEN"
 
 class MiBotDiscord(discord.Client):
+    
+    """
+    Bot personalizado que maneja eventos de Discord utilizando discord.Client.
+    """
+    
     async def on_ready(self):
         """
         Evento que se ejecuta cuando el bot está conectado y listo.
+        
+        Muestra un mensaje en la consola indicando que el bot está listo.
+        
         """
         print(f"Bot conectado como {self.user}")
 
     async def on_message(self, message):
         """
         Manejo de mensajes recibidos.
+        
+        Args:
+            message (discord.Message): El mensaje recibido del canal de Discord.
+        
+        Este método procesa comandos que comienzan con "!evento" y crea eventos en Google Calendar.
+        
+        El formato del mensaje debe ser:
+            !evento Título, YYYY-MM-DD, Duración_en_horas
+        
         """
         if message.author == self.user:
             return  # Ignorar mensajes del propio bot
@@ -39,20 +56,31 @@ class MiBotDiscord(discord.Client):
             except Exception as e:
                 await message.channel.send(f"Ha ocurrido un error: {str(e)}")
 
-
-
-
 class DiscordBot:
+    
+    """
+    Clase que maneja un bot de Discord utilizando discord.ext.commands.Bot.
+    """
+    
     def __init__(self, token):
         self.token = token
         self.bot = commands.Bot(command_prefix="!")
+        
+        """
+        Inicializa la clase DiscordBot con un token de autenticación.
 
-    def run(self):
+        Args:
+            token (str): Token del bot de Discord.
+        """
+
+    def run(self): #Inicia la ejecución del bot de Discord.
         @self.bot.event
+        # Evento que se ejecuta cuando el bot está listo y conectado a Discord
         async def on_ready():
             print(f"✅ Bot conectado como {self.bot.user}")
 
         @self.bot.command()
+        #  Comando simple para saludar al usuario.
         async def hello(ctx):
             await ctx.send("¡Hola! Soy tu bot de Discord.")
 

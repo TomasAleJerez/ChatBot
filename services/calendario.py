@@ -9,9 +9,20 @@ from datetime import datetime, timedelta
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 class GestorEventos:
+    
+    """
+    Clase para gestionar eventos en Google Calendar.
+    
+    Permite autenticar al usuario, crear eventos y obtener el servicio de Google Calendar.
+    """
+    
     def __init__(self, usuario_id):
         """
         Inicializa el gestor de eventos con autenticación del usuario.
+        
+        Args:
+            usuario_id (int): ID del usuario para identificar su token de autenticación.
+        
         """
         self.usuario_id = usuario_id
         self.service = self.obtener_servicio_calendario()
@@ -19,6 +30,10 @@ class GestorEventos:
     def obtener_servicio_calendario(self):
         """
         Autentica al usuario con Google Calendar y devuelve el servicio API.
+        
+        Realiza la autenticación con OAuth 2.0 utilizando credenciales guardadas o
+        solicitando un nuevo acceso si no existe un token válido.
+        
         """
         creds = None
         tokens_dir = "tokens"
@@ -48,6 +63,15 @@ class GestorEventos:
     def crear_evento(self, nombre_evento, fecha_hora, duracion):
         """
         Crea un evento en Google Calendar y devuelve el enlace del evento.
+        
+        Args:
+            nombre_evento (str): Nombre o título del evento.
+            fecha_hora (str): Fecha y hora de inicio del evento en formato ISO8601 (ej. '2025-03-03T14:00:00').
+            duracion (int): Duración del evento en horas.
+
+        Returns:
+            str: Enlace del evento creado o un mensaje de error si ocurre un problema.
+        
         """
         if not self.service:
             return "Error: No se pudo autenticar con Google Calendar."
