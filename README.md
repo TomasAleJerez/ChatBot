@@ -22,7 +22,7 @@ ChatBot IA: Respuestas inteligentes usando modelos de IA.
 
 💾 Requisitos
 
-Python 3.x
+Python 3.12.9
 
 Librerías externas listadas en requirements.txt
 
