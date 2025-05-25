@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+<html lang="es" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>services.calendario &#8212; documentación de ChatBot Inteligente - 1.0</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <script src="../../_static/documentation_options.js?v=4936afed"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/translations.js?v=f85f4cfb"></script>
+    <link rel="index" title="Índice" href="../../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Código fuente para services.calendario</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">google_auth_oauthlib.flow</span><span class="w"> </span><span class="kn">import</span> <span class="n">InstalledAppFlow</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">googleapiclient.discovery</span><span class="w"> </span><span class="kn">import</span> <span class="n">build</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">googleapiclient.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">HttpError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">google.auth.transport.requests</span><span class="w"> </span><span class="kn">import</span> <span class="n">Request</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">utils.decorador</span><span class="w"> </span><span class="kn">import</span> <span class="n">log_accion</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">utils.observador</span><span class="w"> </span><span class="kn">import</span> <span class="n">evento_global</span>
+
+<span class="n">SCOPES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;https://www.googleapis.com/auth/calendar&#39;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="GestorEventos">
+<a class="viewcode-back" href="../../services.html#services.calendario.GestorEventos">[documentos]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">GestorEventos</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Clase para gestionar eventos en Google Calendar.</span>
+
+<span class="sd">    Incluye decoradores de log y notificaciones al observador.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">usuario_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Inicializa el gestor de eventos con autenticación del usuario.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            usuario_id (int): ID del usuario para identificar su token de autenticación.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">usuario_id</span> <span class="o">=</span> <span class="n">usuario_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">service</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">obtener_servicio_calendario</span><span class="p">()</span>
+
+<div class="viewcode-block" id="GestorEventos.obtener_servicio_calendario">
+<a class="viewcode-back" href="../../services.html#services.calendario.GestorEventos.obtener_servicio_calendario">[documentos]</a>
+    <span class="nd">@log_accion</span><span class="p">(</span><span class="s2">&quot;Autenticación Google Calendar&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">obtener_servicio_calendario</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Autentica al usuario con Google Calendar y devuelve el servicio API.</span>
+
+<span class="sd">        Realiza la autenticación con OAuth 2.0 utilizando credenciales guardadas o</span>
+<span class="sd">        solicita un nuevo acceso si no existe un token válido.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Resource | None: Objeto de servicio autenticado o None en caso de error.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">creds</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">tokens_dir</span> <span class="o">=</span> <span class="s2">&quot;tokens&quot;</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">tokens_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">token_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tokens_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;token_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">usuario_id</span><span class="si">}</span><span class="s1">.pickle&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">token_path</span><span class="p">):</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">token_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">token</span><span class="p">:</span>
+                <span class="n">creds</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">creds</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">creds</span><span class="o">.</span><span class="n">valid</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">creds</span> <span class="ow">and</span> <span class="n">creds</span><span class="o">.</span><span class="n">expired</span> <span class="ow">and</span> <span class="n">creds</span><span class="o">.</span><span class="n">refresh_token</span><span class="p">:</span>
+                <span class="n">creds</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">Request</span><span class="p">())</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">flow</span> <span class="o">=</span> <span class="n">InstalledAppFlow</span><span class="o">.</span><span class="n">from_client_secrets_file</span><span class="p">(</span><span class="s1">&#39;credentials.json&#39;</span><span class="p">,</span> <span class="n">SCOPES</span><span class="p">)</span>
+                <span class="n">creds</span> <span class="o">=</span> <span class="n">flow</span><span class="o">.</span><span class="n">run_local_server</span><span class="p">(</span><span class="n">port</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">token_path</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">token</span><span class="p">:</span>
+                <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">creds</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">build</span><span class="p">(</span><span class="s1">&#39;calendar&#39;</span><span class="p">,</span> <span class="s1">&#39;v3&#39;</span><span class="p">,</span> <span class="n">credentials</span><span class="o">=</span><span class="n">creds</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">HttpError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;⚠️ Error al obtener el servicio: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="GestorEventos.crear_evento">
+<a class="viewcode-back" href="../../services.html#services.calendario.GestorEventos.crear_evento">[documentos]</a>
+    <span class="nd">@log_accion</span><span class="p">(</span><span class="s2">&quot;Creación de evento&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">crear_evento</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nombre_evento</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fecha_hora</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">duracion</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Crea un evento en Google Calendar y devuelve el enlace del evento.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            nombre_evento (str): Título del evento.</span>
+<span class="sd">            fecha_hora (str): Fecha/hora de inicio en ISO &#39;YYYY-MM-DDTHH:MM:SS&#39;.</span>
+<span class="sd">            duracion (int): Duración en horas.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Enlace al evento o mensaje de error.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Error: servicio no disponible.&quot;</span>
+
+        <span class="n">inicio</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">fecha_hora</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">T%H:%M:%S&quot;</span><span class="p">)</span>
+        <span class="n">fin</span> <span class="o">=</span> <span class="n">inicio</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">duracion</span><span class="p">)</span>
+
+        <span class="n">evento</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;summary&#39;</span><span class="p">:</span> <span class="n">nombre_evento</span><span class="p">,</span>
+            <span class="s1">&#39;start&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;dateTime&#39;</span><span class="p">:</span> <span class="n">inicio</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span> <span class="s1">&#39;timeZone&#39;</span><span class="p">:</span> <span class="s1">&#39;America/Argentina/Salta&#39;</span><span class="p">},</span>
+            <span class="s1">&#39;end&#39;</span><span class="p">:</span>   <span class="p">{</span><span class="s1">&#39;dateTime&#39;</span><span class="p">:</span> <span class="n">fin</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>    <span class="s1">&#39;timeZone&#39;</span><span class="p">:</span> <span class="s1">&#39;America/Argentina/Salta&#39;</span><span class="p">},</span>
+        <span class="p">}</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">creado</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">events</span><span class="p">()</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">calendarId</span><span class="o">=</span><span class="s1">&#39;primary&#39;</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="n">evento</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+            <span class="n">link</span> <span class="o">=</span> <span class="n">creado</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;htmlLink&#39;</span><span class="p">)</span>
+            <span class="n">evento_global</span><span class="o">.</span><span class="n">notificar</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Evento creado: </span><span class="si">{</span><span class="n">nombre_evento</span><span class="si">}</span><span class="s2"> (ID=</span><span class="si">{</span><span class="n">creado</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;✅ Evento creado: </span><span class="si">{</span><span class="n">link</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">except</span> <span class="n">HttpError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;⚠️ Error al crear evento: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+
+<div class="viewcode-block" id="GestorEventos.eliminar_evento">
+<a class="viewcode-back" href="../../services.html#services.calendario.GestorEventos.eliminar_evento">[documentos]</a>
+    <span class="nd">@log_accion</span><span class="p">(</span><span class="s2">&quot;Eliminación de evento&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">eliminar_evento</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Elimina un evento del calendario.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            event_id (str): ID del evento.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Mensaje de éxito o error.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Error: servicio no disponible.&quot;</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">events</span><span class="p">()</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">calendarId</span><span class="o">=</span><span class="s1">&#39;primary&#39;</span><span class="p">,</span> <span class="n">eventId</span><span class="o">=</span><span class="n">event_id</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+            <span class="n">evento_global</span><span class="o">.</span><span class="n">notificar</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Evento eliminado: ID </span><span class="si">{</span><span class="n">event_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s2">&quot;✅ Evento eliminado correctamente.&quot;</span>
+        <span class="k">except</span> <span class="n">HttpError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;⚠️ Error al eliminar evento: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+
+<div class="viewcode-block" id="GestorEventos.listar_eventos">
+<a class="viewcode-back" href="../../services.html#services.calendario.GestorEventos.listar_eventos">[documentos]</a>
+    <span class="nd">@log_accion</span><span class="p">(</span><span class="s2">&quot;Listado de eventos&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">listar_eventos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_results</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Lista los próximos eventos en el calendario.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            max_results (int): Cantidad máxima de eventos.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Texto con los eventos o mensaje si no hay ninguno.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Error: servicio no disponible.&quot;</span>
+
+        <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;Z&#39;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">events</span><span class="p">()</span><span class="o">.</span><span class="n">list</span><span class="p">(</span>
+                <span class="n">calendarId</span><span class="o">=</span><span class="s1">&#39;primary&#39;</span><span class="p">,</span> <span class="n">timeMin</span><span class="o">=</span><span class="n">now</span><span class="p">,</span>
+                <span class="n">maxResults</span><span class="o">=</span><span class="n">max_results</span><span class="p">,</span> <span class="n">singleEvents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">orderBy</span><span class="o">=</span><span class="s1">&#39;startTime&#39;</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+            <span class="n">items</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="p">[])</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">items</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s2">&quot;No hay eventos próximos.&quot;</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">ev</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+                <span class="n">inicio</span> <span class="o">=</span> <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;start&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;dateTime&#39;</span><span class="p">,</span> <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;start&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">))</span>
+                <span class="n">summary</span> <span class="o">=</span> <span class="n">ev</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;summary&#39;</span><span class="p">,</span> <span class="s1">&#39;(sin título)&#39;</span><span class="p">)</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">inicio</span><span class="si">}</span><span class="s2"> — </span><span class="si">{</span><span class="n">summary</span><span class="si">}</span><span class="s2"> (ID: </span><span class="si">{</span><span class="n">ev</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+            <span class="n">evento_global</span><span class="o">.</span><span class="n">notificar</span><span class="p">(</span><span class="s2">&quot;Listado de eventos consultado&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">HttpError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;⚠️ Error al listar eventos: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span></div>
+</div>
+
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">ChatBot Inteligente</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navegación</h3>
+<p class="caption" role="heading"><span class="caption-text">Contenido:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">ChatBot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../utils.html">utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ChatBot.db.html">ChatBot.db namespace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ChatBot.docs.html">ChatBot.docs namespace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ChatBot.docs.source.html">ChatBot.docs.source namespace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ChatBot.html">ChatBot namespace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ChatBot.services.html">ChatBot.services package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ChatBot.servidor_log.html">ChatBot.servidor_log namespace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ChatBot.utils.html">ChatBot.utils package</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Código de módulo</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,36 +1,25 @@
-# Configuration file for the Sphinx documentation builder.
-#
-# For the full list of built-in configuration values, see the documentation:
-# https://www.sphinx-doc.org/en/master/usage/configuration.html
-
-# -- Project information -----------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
-
 import os
 import sys
-sys.path.insert(0, os.path.abspath('D:\curso python\iita py\ChatBot'))
+
+# 1. AÑADE la carpeta raíz del proyecto al PATH, asumiendo que 'docs/' 
+#    está un nivel por debajo de la raíz:
+sys.path.insert(0, os.path.abspath('D:/curso python/iita py/ChatBot'))
 
 project = 'ChatBot Inteligente'
-copyright = '2025, Tomas Ale Jerez'
 author = 'Tomas Ale Jerez'
 release = '1.0'
 
 # -- General configuration ---------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
-
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
     'sphinx.ext.napoleon',
 ]
 
-templates_path = ['_templates']
-exclude_patterns = []
-
 language = 'es'
-
-# -- Options for HTML output -------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
-
 html_theme = 'alabaster'
-html_static_path = ['_static']
+
+print("\n--- DEBUG: Ruta configurada en sys.path ---")
+print("Ruta absoluta:", os.path.abspath('../..'))
+print("¿Existe el directorio 'ChatBot' aquí?:", os.path.exists(os.path.join(os.path.abspath('D:/curso python/iita py/ChatBot'), 'ChatBot')))
+

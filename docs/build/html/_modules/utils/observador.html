@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+
+<html lang="es" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>utils.observador &#8212; documentación de ChatBot Inteligente - 1.0</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <script src="../../_static/documentation_options.js?v=4936afed"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/translations.js?v=f85f4cfb"></script>
+    <link rel="index" title="Índice" href="../../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Código fuente para utils.observador</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="Observable">
+<a class="viewcode-back" href="../../utils.html#utils.observador.Observable">[documentos]</a>
+<span></span><span class="k">class</span><span class="w"> </span><span class="nc">Observable</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implementa el patrón Observador: permite suscribir observadores y notificarles eventos.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_observadores</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="Observable.agregar_observador">
+<a class="viewcode-back" href="../../utils.html#utils.observador.Observable.agregar_observador">[documentos]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">agregar_observador</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observador</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Agrega un observador a la lista.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            observador (Observer): Instancia que implementa el método `actualizar`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_observadores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">observador</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Observable.notificar">
+<a class="viewcode-back" href="../../utils.html#utils.observador.Observable.notificar">[documentos]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">notificar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mensaje</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Envía un mensaje a todos los observadores registrados.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            mensaje (str): Información o log a distribuir.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">obs</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_observadores</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">obs</span><span class="o">.</span><span class="n">actualizar</span><span class="p">(</span><span class="n">mensaje</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="c1"># Ignorar errores individuales de los observadores</span>
+                <span class="k">pass</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ObservadorLog">
+<a class="viewcode-back" href="../../utils.html#utils.observador.ObservadorLog">[documentos]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ObservadorLog</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Observador que imprime en consola los mensajes de log recibidos.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ObservadorLog.actualizar">
+<a class="viewcode-back" href="../../utils.html#utils.observador.ObservadorLog.actualizar">[documentos]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">actualizar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mensaje</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Método llamado cuando el Observable notifica un mensaje.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            mensaje (str): Mensaje de log o evento.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;📝 Log: </span><span class="si">{</span><span class="n">mensaje</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="c1"># Instancia global para uso en toda la aplicación</span>
+<span class="n">evento_global</span> <span class="o">=</span> <span class="n">Observable</span><span class="p">()</span>
+<span class="c1"># Suscribimos un observador de log por defecto</span>
+<span class="n">evento_global</span><span class="o">.</span><span class="n">agregar_observador</span><span class="p">(</span><span class="n">ObservadorLog</span><span class="p">())</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">ChatBot Inteligente</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navegación</h3>
+<p class="caption" role="heading"><span class="caption-text">Contenido:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">ChatBot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../utils.html">utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ChatBot.db.html">ChatBot.db namespace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ChatBot.docs.html">ChatBot.docs namespace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ChatBot.docs.source.html">ChatBot.docs.source namespace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ChatBot.html">ChatBot namespace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ChatBot.services.html">ChatBot.services package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ChatBot.servidor_log.html">ChatBot.servidor_log namespace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ChatBot.utils.html">ChatBot.utils package</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Código de módulo</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

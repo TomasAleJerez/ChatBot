@@ -1,5 +1,7 @@
 import os
+import sys
 from dotenv import load_dotenv
+from services.autenticacion import iniciar_sesion, registrar_usuario, obtener_id_usuario
 from services.calendario import GestorEventos
 from services.clima import GestorClima
 from services.conversionMoneda import ConvertidorMoneda
@@ -8,204 +10,210 @@ from services.youtube import YouTubeDownloader
 from services.whatsapp import WhatsappBot
 from services.telegram import TelegramBot
 from services.discord import DiscordBot
-from services.autenticacion import iniciar_sesion, registrar_usuario, obtener_id_usuario
 from services.chatbotIA import ChatBot
 from utils.BD_utils import inicializar_bd
+from utils.decorador import log_accion
+from utils.observador import evento_global
 
 # Cargar variables de entorno
 load_dotenv()
-TOKEN_TELEGRAM = os.getenv("TELEGRAM_TOKEN")
-TOKEN_DISCORD = os.getenv("DISCORD_TOKEN")
-WHATSAPP_SID = os.getenv("WHATSAPP_SID")
-WHATSAPP_AUTH_TOKEN = os.getenv("WHATSAPP_AUTH_TOKEN")
 
-# Inicializar la base de datos y servicios
+# Tokens y API Keys
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
+DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
+WHATSAPP_SID = os.getenv("WHATSAPP_SID")
+WHATSAPP_AUTH = os.getenv("WHATSAPP_AUTH_TOKEN")
+
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+OPENWEATHER_API_KEY = os.getenv("OPENWEATHER_API_KEY")
+EXCHANGE_RATE_API_KEY = os.getenv("EXCHANGE_RATE_API_KEY")
+
+# Verificar claves esenciales
+required = {
+    "TELEGRAM_TOKEN": TELEGRAM_TOKEN,
+    "OPENAI_API_KEY": OPENAI_API_KEY,
+    "OPENWEATHER_API_KEY": OPENWEATHER_API_KEY,
+    "EXCHANGE_RATE_API_KEY": EXCHANGE_RATE_API_KEY
+}
+for name, val in required.items():
+    if not val:
+        print(f"⚠️ Advertencia: no se encontró la variable {name} en el entorno.")
+
+# Inicializar base de datos
 try:
-    db_conn = inicializar_bd()
+    inicializar_bd()
     print("✅ Base de datos inicializada correctamente.")
 except Exception as e:
     print(f"⚠️ Error al inicializar la base de datos: {e}")
-    exit()
+    sys.exit(1)
 
+# Instancias globales
 recordatorios = GestorRecordatorios()
 chatbot = ChatBot()
 
-# Inicializar bots con manejo de errores
-bots = {"whatsapp": None, "telegram": None, "discord": None}
+# Función para inicializar bots con manejo de errores
+def inicializar_bots():
+    bots = {"whatsapp": None, "telegram": None, "discord": None}
+    try:
+        bots["whatsapp"] = WhatsappBot(WHATSAPP_SID, WHATSAPP_AUTH)
+        print("✅ Bot de WhatsApp iniciado.")
+    except Exception as e:
+        print(f"⚠️ Error al iniciar WhatsApp Bot: {e}")
+    try:
+        bots["telegram"] = TelegramBot(TELEGRAM_TOKEN)
+        print("✅ Bot de Telegram iniciado.")
+    except Exception as e:
+        print(f"⚠️ Error al iniciar Telegram Bot: {e}")
+    try:
+        bots["discord"] = DiscordBot(DISCORD_TOKEN)
+        print("✅ Bot de Discord iniciado.")
+    except Exception as e:
+        print(f"⚠️ Error al iniciar Discord Bot: {e}")
+    return bots
 
-try:
-    bots["whatsapp"] = WhatsappBot(WHATSAPP_SID, WHATSAPP_AUTH_TOKEN)
-    print("✅ Bot de WhatsApp iniciado.")
-except Exception as e:
-    print(f"⚠️ Error al iniciar WhatsApp Bot: {e}")
+bots = inicializar_bots()
 
-try:
-    bots["telegram"] = TelegramBot(TOKEN_TELEGRAM)
-    print("✅ Bot de Telegram iniciado.")
-except Exception as e:
-    print(f"⚠️ Error al iniciar Telegram Bot: {e}")
-
-try:
-    bots["discord"] = DiscordBot(TOKEN_DISCORD)
-    print("✅ Bot de Discord iniciado.")
-except Exception as e:
-    print(f"⚠️ Error al iniciar Discord Bot: {e}")
-
+# Autenticación y registro de usuario
 def menu_autenticacion():
-    """Menú inicial para elegir entre iniciar sesión o registrarse."""
     while True:
-        print("\n🔐 **Autenticación**")
+        print("\n🔐 Autenticación:")
         print("1️⃣ Iniciar sesión")
         print("2️⃣ Registrarse")
         print("3️⃣ Salir")
-
-        opcion = input("🔹 Elige una opción (1-3): ").strip()
+        opcion = input("Elige una opción (1-3): ").strip()
         if opcion == "1":
-            return autenticar_usuario_con_reintentos()
+            user = autenticar_usuario_con_reintentos()
+            if user:
+                return user
         elif opcion == "2":
-            return registrar_usuario_manual()
+            user = registrar_usuario_manual()
+            if user:
+                return user
         elif opcion == "3":
             print("👋 Hasta pronto.")
-            exit()
+            sys.exit(0)
         else:
-            print("⚠️ Opción no válida. Intenta de nuevo.")
+            print("⚠️ Opción no válida.")
 
+# Intentos de login
 def autenticar_usuario_con_reintentos():
-    """Solicita credenciales y permite hasta 3 intentos de inicio de sesión."""
     intentos = 3
-    while intentos > 0:
-        email = input("📧 Ingresa tu email: ").strip()
-        password = input("🔑 Ingresa tu contraseña: ").strip()
-
+    while intentos:
+        email = input("📧 Email: ").strip()
+        pwd = input("🔑 Contraseña: ").strip()
         try:
-            usuario_id = iniciar_sesion(email, password)
-            if usuario_id:
-                print(f"👋 ¡Bienvenido, usuario {usuario_id}!")
-                return usuario_id
-            else:
-                print(f"❌ Credenciales incorrectas. Te quedan {intentos - 1} intentos.")
-                intentos -= 1
-        except Exception as e:
-            print(f"⚠️ Error al iniciar sesión: {e}")
+            user_id = iniciar_sesion(email, pwd)
+            if user_id:
+                print(f"👋 ¡Bienvenido, usuario {user_id}!")
+                return user_id
             intentos -= 1
-
-    print("🚫 Se agotaron los intentos.")
+            print(f"❌ Incorrecto. Intentos restantes: {intentos}")
+        except Exception as e:
+            intentos -= 1
+            print(f"⚠️ Error al iniciar sesión: {e} ({intentos} restantes)")
+    print("🚫 Intentos agotados.")
     return None
 
+# Registro manual
 def registrar_usuario_manual():
-    """Solicita datos y registra un nuevo usuario"""
-    nombre = input("👤 Ingresa tu nombre: ").strip()
-    email = input("📧 Ingresa tu email: ").strip()
-    password = input("🔑 Ingresa tu contraseña: ").strip()
-
+    nombre = input("👤 Nombre: ").strip()
+    email = input("📧 Email: ").strip()
+    pwd = input("🔑 Contraseña: ").strip()
     try:
-        resultado = registrar_usuario(nombre, email, password)
-        print(resultado)
-        return obtener_id_usuario(email)  # Retorna el ID del usuario registrado
+        if registrar_usuario(nombre, email, pwd):
+            user_id = obtener_id_usuario(email)
+            print("✅ Registro exitoso. Inicia sesión.")
+            return user_id
     except ValueError as e:
-        print(f"Error: {e}")
-        return None
+        print(f"❌ Registro fallido: {e}")
+    return None
 
-def mostrar_menu():
-    """Muestra el menú principal."""
-    print("\n📌 ¿Qué te gustaría hacer?")
-    print("1️⃣ Gestionar eventos en Google Calendar")
-    print("2️⃣ Gestionar recordatorios")
-    print("3️⃣ Consultar el clima")
-    print("4️⃣ Convertir moneda")
-    print("5️⃣ Descargar video/audio de YouTube")
-    print("6️⃣ Hablar con el chatbot IA")
-    print("7️⃣ Gestionar bots (WhatsApp, Telegram, Discord)")
+# Menú principal funciones
+def mostrar_main_menu():
+    print("\n📋 Menú principal:")
+    print("1️⃣ Eventos en Google Calendar")
+    print("2️⃣ Recordatorios")
+    print("3️⃣ Clima")
+    print("4️⃣ Conversión de moneda")
+    print("5️⃣ YouTube Downloader")
+    print("6️⃣ Chatbot IA")
+    print("7️⃣ Bots de mensajería")
     print("8️⃣ Salir")
 
+# Gestión eventos con decorator logging\@
+@log_accion("Gestión de eventos")
+def gestionar_eventos_calendario(gestor):
+    print("\n🗓️ Eventos:")
+    print("a) Crear\nb) Listar\nc) Eliminar")
+    opt = input("Elige (a-c): ").strip().lower()
+    if opt == "a":
+        tit = input("Título: ")
+        fh = input("Fecha (YYYY-MM-DDTHH:MM:SS): ")
+        dur = int(input("Duración (h): "))
+        print(gestor.crear_evento(tit, fh, dur))
+    elif opt == "b": print(gestor.listar_eventos())
+    elif opt == "c": print(gestor.eliminar_evento(input("ID evento: ").strip()))
+    else: print("❌ Opción inválida.")
+
+# Gestión recordatorios
 def gestionar_recordatorios():
-    """Gestión de recordatorios (añadir, listar, eliminar).
-    
-    Muestra un menú con las siguientes opciones:
-        - Añadir un recordatorio
-        - Mostrar todos los recordatorios
-        - Eliminar un recordatorio
-    """
-    print("\n📅 **Gestión de Recordatorios**")
-    print("1️⃣ Añadir un recordatorio")
-    print("2️⃣ Mostrar todos los recordatorios")
-    print("3️⃣ Eliminar un recordatorio")
+    print("\n📅 Recordatorios:")
+    print("1) Añadir\n2) Listar\n3) Eliminar")
+    opt = input("Elige (1-3): ").strip()
+    if opt == "1": print(recordatorios.crear_recordatorio(
+            input("Descripción: "), input("Fecha (YYYY-MM-DD HH:MM:SS): ")))
+    elif opt == "2": print(recordatorios.listar_recordatorios())
+    elif opt == "3":
+        try: print(recordatorios.eliminar_recordatorio(
+                int(input("ID a eliminar: "))))
+        except: print("❌ ID inválido.")
+    else: print("⚠️ Opción no válida.")
 
-    opcion = input("🔹 Elige una opción (1-3): ")
-    if opcion == "1":
-        texto = input("✏️ Escribe el recordatorio: ").strip()
-        fecha = input("📅 Fecha y hora (YYYY-MM-DD HH:MM:SS): ").strip()
-        print(recordatorios.crear_recordatorio(texto, fecha))
-    elif opcion == "2":
-        print(recordatorios.listar_recordatorios())
-    elif opcion == "3":
-        try:
-            id_recordatorio = int(input("🆔 ID del recordatorio a eliminar: "))
-            print(recordatorios.eliminar_recordatorio(id_recordatorio))
-        except ValueError:
-            print("❌ Error: Ingresa un ID válido.")
-    else:
-        print("⚠️ Opción no válida.")
-
-def descargar_youtube():
-    """Permite descargar videos o audios desde YouTube
-    Solicita al usuario ingresar la URL del video y el formato de descarga (mp4 o mp3).
-    Muestra un mensaje con el resultado de la descarga.
-    ."""
-    url = input("🔗 URL del video de YouTube: ").strip()
-    formato = input("🎵 Formato (mp4/mp3): ").lower().strip()
-    downloader = YouTubeDownloader()
-    print(downloader.descargar_video(url, formato))
-
+# Gestión bots
 def manejar_bots():
-    """Menú para manejar bots de WhatsApp, Telegram y Discord.
-    El usuario puede enviar mensajes a través de cualquiera de estos bots según su disponibilidad.
-    """
-    print("\n🤖 **Gestión de Bots**")
-    print("1️⃣ WhatsApp")
-    print("2️⃣ Telegram")
-    print("3️⃣ Discord")
+    print("\n🤖 Bots:")
+    print("1) WhatsApp\n2) Telegram\n3) Discord")
+    opt = input("Elige (1-3): ").strip()
+    if opt == "1" and bots["whatsapp"]:
+        bots["whatsapp"].enviar_mensaje(
+            input("Número destino: "), input("Mensaje: "))
+    elif opt == "2" and bots["telegram"]:
+        bots["telegram"].enviar_mensaje(input("Mensaje: "))
+    elif opt == "3" and bots["discord"]:
+        bots["discord"].enviar_mensaje(input("Mensaje: "))
+    else: print("⚠️ Bot no disponible o inválido.")
 
-    opcion = input("🔹 Elige una opción (1-3): ")
-    if opcion == "1" and bots["whatsapp"]:
-        numero = input("📱 Ingresa el número de teléfono: ").strip()
-        mensaje = input("💬 Escribe el mensaje: ").strip()
-        bots["whatsapp"].enviar_mensaje(numero, mensaje)
-    elif opcion == "2" and bots["telegram"]:
-        mensaje = input("💬 Escribe el mensaje: ").strip()
-        bots["telegram"].enviar_mensaje(mensaje)
-    elif opcion == "3" and bots["discord"]:
-        mensaje = input("💬 Escribe el mensaje: ").strip()
-        bots["discord"].enviar_mensaje(mensaje)
-    else:
-        print("⚠️ Bot no disponible o opción no válida.")
+# Main loop
 
 def main():
-    """Función principal del asistente virtual.
-    
-    - Inicializa la base de datos.
-    - Muestra el menú de autenticación.
-    - Permite al usuario seleccionar entre varias funcionalidades.
-    """
-    print("🎉 ¡Bienvenido al Asistente Virtual!")
-    usuario_id = menu_autenticacion()
-    if usuario_id is None:
-        return
-
+    user_id = menu_autenticacion()
+    if not user_id: return
+    gestor_cal = GestorEventos(user_id)
+    gestor_cli = GestorClima()
+    gestor_conv = ConvertidorMoneda()
+    yt_down = YouTubeDownloader()
     while True:
-        mostrar_menu()
-        opcion = input("🔹 Elige una opción (1-8): ")
-        opciones = {
-            "1": lambda: print("⚠️ Funcionalidad de eventos aún no implementada."),
-            "2": gestionar_recordatorios,
-            "3": lambda: print("⚠️ Funcionalidad del clima aún no implementada."),
-            "4": lambda: print("⚠️ Funcionalidad de conversión de moneda aún no implementada."),
-            "5": descargar_youtube,
-            "6": lambda: print(chatbot.responder(input("💬 Pregunta algo al chatbot: ")) if chatbot else "⚠️ Chatbot no disponible."),
-            "7": manejar_bots,
-            "8": lambda: print("👋 ¡Gracias por usar el asistente virtual! Hasta pronto.") or exit(),
-        }
-        opciones.get(opcion, lambda: print("⚠️ Opción no válida."))()
+        mostrar_main_menu()
+        sel = input("Opción (1-8): ").strip()
+        if sel == "1": gestionar_eventos_calendario(gestor_cal)
+        elif sel == "2": gestionar_recordatorios()
+        elif sel == "3":
+            print(gestor_cli.obtener_clima(input("Ciudad: ")))
+        elif sel == "4": print(gestor_conv.convertir_moneda(
+                float(input("Monto: ")), input("De: ").upper(),
+                input("A: ").upper()))
+        elif sel == "5":
+            url = input("YouTube URL: ")
+            fmt = input("Formato (mp4/mp3): ").lower()
+            func = yt_down.descargar_video if fmt == "mp4" else yt_down.descargar_audio
+            print(func(url))
+        elif sel == "6": print(chatbot.responder(input("Preguntar IA: ")))
+        elif sel == "7": manejar_bots()
+        elif sel == "8":
+            print("👋 Adiós.")
+            break
+        else: print("⚠️ Opción no válida.")
+        evento_global.notificar(f"Usuario {user_id} eligió {sel}")
 
 if __name__ == "__main__":
     main()

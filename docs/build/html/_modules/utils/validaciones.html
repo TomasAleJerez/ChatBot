@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+
+<html lang="es" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>utils.validaciones &#8212; documentación de ChatBot Inteligente - 1.0</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <script src="../../_static/documentation_options.js?v=4936afed"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/translations.js?v=f85f4cfb"></script>
+    <link rel="index" title="Índice" href="../../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Código fuente para utils.validaciones</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+
+<div class="viewcode-block" id="validar_email">
+<a class="viewcode-back" href="../../utils.html#utils.validaciones.validar_email">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">validar_email</span><span class="p">(</span><span class="n">email</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Valida si un email tiene el formato correcto.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;^\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b&#39;</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">email</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="validar_nombre_ciudad">
+<a class="viewcode-back" href="../../utils.html#utils.validaciones.validar_nombre_ciudad">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">validar_nombre_ciudad</span><span class="p">(</span><span class="n">ciudad</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Valida que el nombre de la ciudad solo contenga letras y espacios.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        ciudad (str): Nombre de la ciudad ingresado por el usuario.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True si es válido, False si contiene caracteres no permitidos.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[a-zA-ZÀ-ÿ\s-]+$&quot;</span><span class="p">,</span> <span class="n">ciudad</span><span class="p">))</span></div>
+
+
+
+<span class="c1"># Lista de códigos de moneda ISO 4217 válidos</span>
+<span class="n">CODIGOS_MONEDA_VALIDOS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;USD&quot;</span><span class="p">,</span> <span class="s2">&quot;EUR&quot;</span><span class="p">,</span> <span class="s2">&quot;GBP&quot;</span><span class="p">,</span> <span class="s2">&quot;JPY&quot;</span><span class="p">,</span> <span class="s2">&quot;ARS&quot;</span><span class="p">,</span> <span class="s2">&quot;MXN&quot;</span><span class="p">,</span> <span class="s2">&quot;BRL&quot;</span><span class="p">,</span> <span class="s2">&quot;CAD&quot;</span><span class="p">,</span> <span class="s2">&quot;AUD&quot;</span><span class="p">,</span> <span class="s2">&quot;CHF&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CNY&quot;</span><span class="p">,</span> <span class="s2">&quot;INR&quot;</span><span class="p">,</span> <span class="s2">&quot;KRW&quot;</span><span class="p">,</span> <span class="s2">&quot;RUB&quot;</span><span class="p">,</span> <span class="s2">&quot;ZAR&quot;</span><span class="p">,</span> <span class="s2">&quot;NZD&quot;</span><span class="p">,</span> <span class="s2">&quot;SGD&quot;</span><span class="p">,</span> <span class="s2">&quot;HKD&quot;</span>
+<span class="p">}</span>
+
+<div class="viewcode-block" id="validar_codigo_moneda">
+<a class="viewcode-back" href="../../utils.html#utils.validaciones.validar_codigo_moneda">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">validar_codigo_moneda</span><span class="p">(</span><span class="n">moneda</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Verifica si el código de moneda ingresado es válido.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        moneda (str): Código de la moneda (ej. &quot;USD&quot;, &quot;EUR&quot;).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True si es válido, False si no lo es.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[A-Z]</span><span class="si">{3}</span><span class="s2">$&quot;</span><span class="p">,</span> <span class="n">moneda</span><span class="p">))</span> <span class="ow">and</span> <span class="n">moneda</span> <span class="ow">in</span> <span class="n">CODIGOS_MONEDA_VALIDOS</span></div>
+
+
+
+<div class="viewcode-block" id="validar_fecha">
+<a class="viewcode-back" href="../../utils.html#utils.validaciones.validar_fecha">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">validar_fecha</span><span class="p">(</span><span class="n">fecha</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Valida si una fecha está en el formato correcto &#39;YYYY-MM-DD HH:MM:SS&#39;.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        fecha (str): Fecha a validar.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True si es válida, False si no lo es.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">fecha</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">ChatBot Inteligente</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navegación</h3>
+<p class="caption" role="heading"><span class="caption-text">Contenido:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">ChatBot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../utils.html">utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ChatBot.db.html">ChatBot.db namespace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ChatBot.docs.html">ChatBot.docs namespace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ChatBot.docs.source.html">ChatBot.docs.source namespace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ChatBot.html">ChatBot namespace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ChatBot.services.html">ChatBot.services package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ChatBot.servidor_log.html">ChatBot.servidor_log namespace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ChatBot.utils.html">ChatBot.utils package</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Código de módulo</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

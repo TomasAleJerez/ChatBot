@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+
+<html lang="es" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>services package &#8212; documentación de ChatBot Inteligente - 1.0</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=4936afed"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/translations.js?v=f85f4cfb"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Búsqueda" href="search.html" />
+    <link rel="prev" title="services" href="modules.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="services-package">
+<h1>services package<a class="headerlink" href="#services-package" title="Link to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-services.autenticacion">
+<span id="services-autenticacion-module"></span><h2>services.autenticacion module<a class="headerlink" href="#module-services.autenticacion" title="Link to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="services.autenticacion.eliminar_usuario">
+<span class="sig-prename descclassname"><span class="pre">services.autenticacion.</span></span><span class="sig-name descname"><span class="pre">eliminar_usuario</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/services/autenticacion.html#eliminar_usuario"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.autenticacion.eliminar_usuario" title="Link to this definition">¶</a></dt>
+<dd><p>Elimina un usuario de la base de datos.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>user_id</strong> (<em>int</em>) – ID del usuario a eliminar.</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>True si la eliminación fue exitosa, False si ocurrió un error.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="services.autenticacion.iniciar_sesion">
+<span class="sig-prename descclassname"><span class="pre">services.autenticacion.</span></span><span class="sig-name descname"><span class="pre">iniciar_sesion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/services/autenticacion.html#iniciar_sesion"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.autenticacion.iniciar_sesion" title="Link to this definition">¶</a></dt>
+<dd><p>Verifica credenciales del usuario y devuelve su ID si son correctas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>email</strong> (<em>str</em>) – Dirección de correo electrónico del usuario.</p></li>
+<li><p><strong>password</strong> (<em>str</em>) – Contraseña proporcionada por el usuario.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>ID del usuario autenticado si las credenciales son correctas, None en caso contrario.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="services.autenticacion.modificar_usuario">
+<span class="sig-prename descclassname"><span class="pre">services.autenticacion.</span></span><span class="sig-name descname"><span class="pre">modificar_usuario</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nuevo_nombre</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nuevo_email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nueva_password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/services/autenticacion.html#modificar_usuario"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.autenticacion.modificar_usuario" title="Link to this definition">¶</a></dt>
+<dd><p>Modifica los datos de un usuario existente en la base de datos.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>user_id</strong> (<em>int</em>) – ID del usuario a modificar.</p></li>
+<li><p><strong>nuevo_nombre</strong> (<em>str</em><em>, </em><em>opcional</em>) – Nuevo nombre del usuario.</p></li>
+<li><p><strong>nuevo_email</strong> (<em>str</em><em>, </em><em>opcional</em>) – Nuevo email del usuario.</p></li>
+<li><p><strong>nueva_password</strong> (<em>str</em><em>, </em><em>opcional</em>) – Nueva contraseña del usuario.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>True si la modificación fue exitosa, False si ocurrió un error.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="services.autenticacion.obtener_id_usuario">
+<span class="sig-prename descclassname"><span class="pre">services.autenticacion.</span></span><span class="sig-name descname"><span class="pre">obtener_id_usuario</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/services/autenticacion.html#obtener_id_usuario"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.autenticacion.obtener_id_usuario" title="Link to this definition">¶</a></dt>
+<dd><p>Obtiene el ID de un usuario a partir de su email.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>email</strong> (<em>str</em>) – Dirección de correo electrónico del usuario.</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>ID del usuario si existe, None en caso contrario.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="services.autenticacion.registrar_usuario">
+<span class="sig-prename descclassname"><span class="pre">services.autenticacion.</span></span><span class="sig-name descname"><span class="pre">registrar_usuario</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nombre</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/services/autenticacion.html#registrar_usuario"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.autenticacion.registrar_usuario" title="Link to this definition">¶</a></dt>
+<dd><p>Registra un nuevo usuario con nombre, email y contraseña en la base de datos.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nombre</strong> (<em>str</em>) – Nombre del usuario.</p></li>
+<li><p><strong>email</strong> (<em>str</em>) – Dirección de correo electrónico del usuario.</p></li>
+<li><p><strong>password</strong> (<em>str</em>) – Contraseña del usuario en texto plano.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>True si el usuario se registró exitosamente, False si ocurrió un error.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="services.autenticacion.validar_email">
+<span class="sig-prename descclassname"><span class="pre">services.autenticacion.</span></span><span class="sig-name descname"><span class="pre">validar_email</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/services/autenticacion.html#validar_email"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.autenticacion.validar_email" title="Link to this definition">¶</a></dt>
+<dd><p>Verifica si el email tiene un formato válido.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>email</strong> (<em>str</em>) – Dirección de correo electrónico a validar.</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>True si el formato del email es válido, False en caso contrario.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-services.calendario">
+<span id="services-calendario-module"></span><h2>services.calendario module<a class="headerlink" href="#module-services.calendario" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="services.calendario.GestorEventos">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.calendario.</span></span><span class="sig-name descname"><span class="pre">GestorEventos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">usuario_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/calendario.html#GestorEventos"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.calendario.GestorEventos" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Clase para gestionar eventos en Google Calendar.</p>
+<p>Incluye decoradores de log y notificaciones al observador.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="services.calendario.GestorEventos.crear_evento">
+<span class="sig-name descname"><span class="pre">crear_evento</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nombre_evento</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fecha_hora</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duracion</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/services/calendario.html#GestorEventos.crear_evento"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.calendario.GestorEventos.crear_evento" title="Link to this definition">¶</a></dt>
+<dd><p>Crea un evento en Google Calendar y devuelve el enlace del evento.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nombre_evento</strong> (<em>str</em>) – Título del evento.</p></li>
+<li><p><strong>fecha_hora</strong> (<em>str</em>) – Fecha/hora de inicio en ISO “YYYY-MM-DDTHH:MM:SS”.</p></li>
+<li><p><strong>duracion</strong> (<em>int</em>) – Duración en horas.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>Enlace al evento o mensaje de error.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="services.calendario.GestorEventos.eliminar_evento">
+<span class="sig-name descname"><span class="pre">eliminar_evento</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/services/calendario.html#GestorEventos.eliminar_evento"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.calendario.GestorEventos.eliminar_evento" title="Link to this definition">¶</a></dt>
+<dd><p>Elimina un evento del calendario.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event_id</strong> (<em>str</em>) – ID del evento.</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>Mensaje de éxito o error.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="services.calendario.GestorEventos.listar_eventos">
+<span class="sig-name descname"><span class="pre">listar_eventos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/services/calendario.html#GestorEventos.listar_eventos"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.calendario.GestorEventos.listar_eventos" title="Link to this definition">¶</a></dt>
+<dd><p>Lista los próximos eventos en el calendario.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>max_results</strong> (<em>int</em>) – Cantidad máxima de eventos.</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>Texto con los eventos o mensaje si no hay ninguno.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="services.calendario.GestorEventos.obtener_servicio_calendario">
+<span class="sig-name descname"><span class="pre">obtener_servicio_calendario</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/calendario.html#GestorEventos.obtener_servicio_calendario"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.calendario.GestorEventos.obtener_servicio_calendario" title="Link to this definition">¶</a></dt>
+<dd><p>Autentica al usuario con Google Calendar y devuelve el servicio API.</p>
+<p>Realiza la autenticación con OAuth 2.0 utilizando credenciales guardadas o
+solicita un nuevo acceso si no existe un token válido.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Objeto de servicio autenticado o None en caso de error.</p>
+</dd>
+<dt class="field-even">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-even"><p>Resource | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-services.chatbotIA">
+<span id="services-chatbotia-module"></span><h2>services.chatbotIA module<a class="headerlink" href="#module-services.chatbotIA" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="services.chatbotIA.ChatBot">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.chatbotIA.</span></span><span class="sig-name descname"><span class="pre">ChatBot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modelo</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'text-davinci-003'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/chatbotIA.html#ChatBot"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.chatbotIA.ChatBot" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Clase que representa un chatbot que utiliza OpenAI para generar respuestas.</p>
+<dl class="simple">
+<dt>Métodos:</dt><dd><p>responder(pregunta): Devuelve la respuesta de la IA a una pregunta.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="services.chatbotIA.ChatBot.responder">
+<span class="sig-name descname"><span class="pre">responder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pregunta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/services/chatbotIA.html#ChatBot.responder"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.chatbotIA.ChatBot.responder" title="Link to this definition">¶</a></dt>
+<dd><p>Genera una respuesta a partir de una pregunta utilizando OpenAI.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pregunta</strong> (<em>str</em>) – La pregunta o mensaje que se enviará al modelo de IA.</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>La respuesta generada por el modelo de IA o un mensaje de error.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="services.chatbotIA.preguntar_ia">
+<span class="sig-prename descclassname"><span class="pre">services.chatbotIA.</span></span><span class="sig-name descname"><span class="pre">preguntar_ia</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pregunta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelo</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'text-davinci-003'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/services/chatbotIA.html#preguntar_ia"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.chatbotIA.preguntar_ia" title="Link to this definition">¶</a></dt>
+<dd><p>Envía una pregunta al modelo de IA de OpenAI y obtiene una respuesta.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pregunta</strong> (<em>str</em>) – Texto de entrada para la IA.</p></li>
+<li><p><strong>modelo</strong> (<em>str</em>) – Identificador del modelo de OpenAI.</p></li>
+<li><p><strong>max_tokens</strong> (<em>int</em>) – Máximo número de tokens a generar.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>Texto con la respuesta generada o mensaje de error.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-services.clima">
+<span id="services-clima-module"></span><h2>services.clima module<a class="headerlink" href="#module-services.clima" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="services.clima.GestorClima">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.clima.</span></span><span class="sig-name descname"><span class="pre">GestorClima</span></span><a class="reference internal" href="_modules/services/clima.html#GestorClima"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.clima.GestorClima" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Clase para obtener información meteorológica de una ciudad utilizando OpenWeather API.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="services.clima.GestorClima.API_KEY">
+<span class="sig-name descname"><span class="pre">API_KEY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'69507eec86a01486ad38d83884cb5fd6'</span></em><a class="headerlink" href="#services.clima.GestorClima.API_KEY" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="services.clima.GestorClima.BASE_URL">
+<span class="sig-name descname"><span class="pre">BASE_URL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'http://api.openweathermap.org/data/2.5/weather'</span></em><a class="headerlink" href="#services.clima.GestorClima.BASE_URL" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="services.clima.GestorClima.obtener_clima">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">obtener_clima</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ciudad</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unidades</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'metric'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lang</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'es'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/clima.html#GestorClima.obtener_clima"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.clima.GestorClima.obtener_clima" title="Link to this definition">¶</a></dt>
+<dd><p>Obtiene el clima de una ciudad usando la API de OpenWeather.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ciudad</strong> (<em>str</em>) – Nombre de la ciudad.</p></li>
+<li><p><strong>unidades</strong> (<em>str</em>) – Sistema de unidades (“metric”, “imperial”, “standard”).</p></li>
+<li><p><strong>lang</strong> (<em>str</em>) – Idioma de la respuesta (“es”, “en”, etc.).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-services.contactos">
+<span id="services-contactos-module"></span><h2>services.contactos module<a class="headerlink" href="#module-services.contactos" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-services.conversionMoneda">
+<span id="services-conversionmoneda-module"></span><h2>services.conversionMoneda module<a class="headerlink" href="#module-services.conversionMoneda" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="services.conversionMoneda.ConvertidorMoneda">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.conversionMoneda.</span></span><span class="sig-name descname"><span class="pre">ConvertidorMoneda</span></span><a class="reference internal" href="_modules/services/conversionMoneda.html#ConvertidorMoneda"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.conversionMoneda.ConvertidorMoneda" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Clase para convertir monedas utilizando la API de ExchangeRate-API.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="services.conversionMoneda.ConvertidorMoneda.API_KEY">
+<span class="sig-name descname"><span class="pre">API_KEY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'2e25582f8633944fa91dbabb'</span></em><a class="headerlink" href="#services.conversionMoneda.ConvertidorMoneda.API_KEY" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="services.conversionMoneda.ConvertidorMoneda.BASE_URL">
+<span class="sig-name descname"><span class="pre">BASE_URL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'https://v6.exchangerate-api.com/v6'</span></em><a class="headerlink" href="#services.conversionMoneda.ConvertidorMoneda.BASE_URL" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="services.conversionMoneda.ConvertidorMoneda.convertir_moneda">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">convertir_moneda</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">monto</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">moneda_origen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">moneda_destino</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/conversionMoneda.html#ConvertidorMoneda.convertir_moneda"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.conversionMoneda.ConvertidorMoneda.convertir_moneda" title="Link to this definition">¶</a></dt>
+<dd><p>Convierte una cantidad de una moneda a otra usando la API de ExchangeRate-API.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>monto</strong> (<em>float</em>) – Cantidad de dinero a convertir.</p></li>
+<li><p><strong>moneda_origen</strong> (<em>str</em>) – Código de la moneda de origen (ej. «USD»).</p></li>
+<li><p><strong>moneda_destino</strong> (<em>str</em>) – Código de la moneda de destino (ej. «EUR»).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-services.discord">
+<span id="services-discord-module"></span><h2>services.discord module<a class="headerlink" href="#module-services.discord" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="services.discord.DiscordBot">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.discord.</span></span><span class="sig-name descname"><span class="pre">DiscordBot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/discord.html#DiscordBot"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.discord.DiscordBot" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Clase que maneja un bot de Discord utilizando discord.ext.commands.Bot.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="services.discord.DiscordBot.bot">
+<span class="sig-name descname"><span class="pre">bot</span></span><a class="headerlink" href="#services.discord.DiscordBot.bot" title="Link to this definition">¶</a></dt>
+<dd><p>Inicializa la clase DiscordBot con un token de autenticación.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>token</strong> (<em>str</em>) – Token del bot de Discord.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="services.discord.DiscordBot.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/discord.html#DiscordBot.run"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.discord.DiscordBot.run" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="services.discord.MiBotDiscord">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.discord.</span></span><span class="sig-name descname"><span class="pre">MiBotDiscord</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">intents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Intents</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">options</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/discord.html#MiBotDiscord"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.discord.MiBotDiscord" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Client</span></code></p>
+<p>Bot personalizado que maneja eventos de Discord utilizando discord.Client.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="services.discord.MiBotDiscord.on_message">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">on_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/discord.html#MiBotDiscord.on_message"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.discord.MiBotDiscord.on_message" title="Link to this definition">¶</a></dt>
+<dd><p>Manejo de mensajes recibidos.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>discord.Message</em>) – El mensaje recibido del canal de Discord.</p>
+</dd>
+</dl>
+<p>Este método procesa comandos que comienzan con «!evento» y crea eventos en Google Calendar.</p>
+<dl class="simple">
+<dt>El formato del mensaje debe ser:</dt><dd><p>!evento Título, YYYY-MM-DD, Duración_en_horas</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="services.discord.MiBotDiscord.on_ready">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">on_ready</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/discord.html#MiBotDiscord.on_ready"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.discord.MiBotDiscord.on_ready" title="Link to this definition">¶</a></dt>
+<dd><p>Evento que se ejecuta cuando el bot está conectado y listo.</p>
+<p>Muestra un mensaje en la consola indicando que el bot está listo.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-services.finanzasPersonales">
+<span id="services-finanzaspersonales-module"></span><h2>services.finanzasPersonales module<a class="headerlink" href="#module-services.finanzasPersonales" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-services.noticia">
+<span id="services-noticia-module"></span><h2>services.noticia module<a class="headerlink" href="#module-services.noticia" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-services.recordatorios">
+<span id="services-recordatorios-module"></span><h2>services.recordatorios module<a class="headerlink" href="#module-services.recordatorios" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="services.recordatorios.GestorRecordatorios">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.recordatorios.</span></span><span class="sig-name descname"><span class="pre">GestorRecordatorios</span></span><a class="reference internal" href="_modules/services/recordatorios.html#GestorRecordatorios"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.recordatorios.GestorRecordatorios" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Clase para gestionar recordatorios en la base de datos.
+Incluye decoradores de log y notificaciones al observador.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="services.recordatorios.GestorRecordatorios.crear_recordatorio">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">crear_recordatorio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">descripcion</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fecha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/services/recordatorios.html#GestorRecordatorios.crear_recordatorio"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.recordatorios.GestorRecordatorios.crear_recordatorio" title="Link to this definition">¶</a></dt>
+<dd><p>Crea un nuevo recordatorio en la base de datos.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>descripcion</strong> (<em>str</em>) – Descripción del recordatorio.</p></li>
+<li><p><strong>fecha</strong> (<em>str</em>) – Fecha y hora en formato “YYYY-MM-DD HH:MM:SS”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>Mensaje de confirmación o error.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="services.recordatorios.GestorRecordatorios.eliminar_recordatorio">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">eliminar_recordatorio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recordatorio_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/services/recordatorios.html#GestorRecordatorios.eliminar_recordatorio"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.recordatorios.GestorRecordatorios.eliminar_recordatorio" title="Link to this definition">¶</a></dt>
+<dd><p>Elimina un recordatorio por su ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>recordatorio_id</strong> (<em>int</em>) – ID del recordatorio a eliminar.</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>Mensaje de confirmación o error.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="services.recordatorios.GestorRecordatorios.listar_recordatorios">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">listar_recordatorios</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/services/recordatorios.html#GestorRecordatorios.listar_recordatorios"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.recordatorios.GestorRecordatorios.listar_recordatorios" title="Link to this definition">¶</a></dt>
+<dd><p>Lista todos los recordatorios almacenados en la base de datos.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Lista de recordatorios o mensaje si no hay ninguno.</p>
+</dd>
+<dt class="field-even">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="services.recordatorios.GestorRecordatorios.modificar_recordatorio">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">modificar_recordatorio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recordatorio_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nueva_descripcion</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nueva_fecha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/services/recordatorios.html#GestorRecordatorios.modificar_recordatorio"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.recordatorios.GestorRecordatorios.modificar_recordatorio" title="Link to this definition">¶</a></dt>
+<dd><p>Modifica un recordatorio existente.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>recordatorio_id</strong> (<em>int</em>) – ID del recordatorio a modificar.</p></li>
+<li><p><strong>nueva_descripcion</strong> (<em>str</em><em>, </em><em>opcional</em>) – Nueva descripción.</p></li>
+<li><p><strong>nueva_fecha</strong> (<em>str</em><em>, </em><em>opcional</em>) – Nueva fecha en formato “YYYY-MM-DD HH:MM:SS”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>Mensaje de confirmación o error.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-services.telegram">
+<span id="services-telegram-module"></span><h2>services.telegram module<a class="headerlink" href="#module-services.telegram" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="services.telegram.TelegramBot">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.telegram.</span></span><span class="sig-name descname"><span class="pre">TelegramBot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/telegram.html#TelegramBot"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.telegram.TelegramBot" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Clase que representa el bot de Telegram.</p>
+<p>Esta clase gestiona la inicialización del bot de Telegram y maneja los comandos y mensajes de los usuarios.
+Se encargará de agregar los manejadores de comandos y mensajes y de iniciar el ciclo de polling para recibir y responder a los mensajes.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="services.telegram.TelegramBot.token">
+<span class="sig-name descname"><span class="pre">token</span></span><a class="headerlink" href="#services.telegram.TelegramBot.token" title="Link to this definition">¶</a></dt>
+<dd><p>El token de autenticación del bot de Telegram.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="services.telegram.TelegramBot.app">
+<span class="sig-name descname"><span class="pre">app</span></span><a class="headerlink" href="#services.telegram.TelegramBot.app" title="Link to this definition">¶</a></dt>
+<dd><p>La instancia de la aplicación de Telegram que gestiona las interacciones con la API de Telegram.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Application</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="services.telegram.TelegramBot.handle_message">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handle_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">update</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Update</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CallbackContext</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/telegram.html#TelegramBot.handle_message"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.telegram.TelegramBot.handle_message" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="services.telegram.TelegramBot.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/telegram.html#TelegramBot.run"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.telegram.TelegramBot.run" title="Link to this definition">¶</a></dt>
+<dd><p>Inicia el bot de Telegram.</p>
+<p>Este método inicia el ciclo de polling para que el bot comience a recibir y responder a mensajes de los usuarios.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="services.telegram.TelegramBot.start">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">update</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Update</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CallbackContext</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/telegram.html#TelegramBot.start"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.telegram.TelegramBot.start" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="services.telegram.descargar">
+<span class="sig-prename descclassname"><span class="pre">services.telegram.</span></span><span class="sig-name descname"><span class="pre">descargar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">update</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Update</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CallbackContext</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/telegram.html#descargar"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.telegram.descargar" title="Link to this definition">¶</a></dt>
+<dd><p>Descarga un video de YouTube a pedido del usuario.</p>
+<p>Este método es llamado cuando un usuario envía el comando «/descargar» seguido de la URL y formato de un video de YouTube.
+Descarga el video solicitado en el formato especificado. Si no se especifica un formato, el formato predeterminado es mp4.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="services.telegram.start">
+<span class="sig-prename descclassname"><span class="pre">services.telegram.</span></span><span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">update</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Update</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CallbackContext</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/telegram.html#start"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.telegram.start" title="Link to this definition">¶</a></dt>
+<dd><p>Responde con un mensaje de bienvenida.</p>
+<p>Este método es llamado cuando un usuario envía el comando «/start» al bot de Telegram.
+Responde con un mensaje de bienvenida y proporciona instrucciones sobre cómo usar el bot para descargar videos de YouTube.</p>
+</dd></dl>
+
+</section>
+<section id="module-services.trafico">
+<span id="services-trafico-module"></span><h2>services.trafico module<a class="headerlink" href="#module-services.trafico" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-services.whatsapp">
+<span id="services-whatsapp-module"></span><h2>services.whatsapp module<a class="headerlink" href="#module-services.whatsapp" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="services.whatsapp.WhatsappBot">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.whatsapp.</span></span><span class="sig-name descname"><span class="pre">WhatsappBot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">account_sid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auth_token</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">whatsapp_number</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'whatsapp:+14155238886'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/whatsapp.html#WhatsappBot"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.whatsapp.WhatsappBot" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Clase para interactuar con la API de Twilio y enviar mensajes por WhatsApp.</p>
+<p>Esta clase permite enviar mensajes a través de WhatsApp utilizando la API de Twilio.
+El bot requiere un <cite>account_sid</cite> y un <cite>auth_token</cite> de Twilio, que se utilizan para autenticar las solicitudes.
+Además, se puede especificar un número de WhatsApp desde el cual se enviarán los mensajes.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="services.whatsapp.WhatsappBot.enviar_mensaje">
+<span class="sig-name descname"><span class="pre">enviar_mensaje</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numero_destino</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mensaje</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/whatsapp.html#WhatsappBot.enviar_mensaje"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.whatsapp.WhatsappBot.enviar_mensaje" title="Link to this definition">¶</a></dt>
+<dd><p>Envía un mensaje por WhatsApp utilizando Twilio.</p>
+<p>Este método utiliza el cliente de Twilio para enviar un mensaje al número de WhatsApp especificado.
+El mensaje se envía desde el número configurado en la clase.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>numero_destino</strong> (<em>str</em>) – El número de teléfono de destino al que se enviará el mensaje.
+Debe incluir el prefijo “whatsapp:” (ej. «whatsapp:+123456789»).</p></li>
+<li><p><strong>mensaje</strong> (<em>str</em>) – El contenido del mensaje que se enviará.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-services.youtube">
+<span id="services-youtube-module"></span><h2>services.youtube module<a class="headerlink" href="#module-services.youtube" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="services.youtube.YouTubeDownloader">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.youtube.</span></span><span class="sig-name descname"><span class="pre">YouTubeDownloader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/youtube.html#YouTubeDownloader"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.youtube.YouTubeDownloader" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Clase para descargar videos o audios de YouTube.</p>
+<p>Esta clase permite descargar videos completos o solo su audio en formato MP4 desde YouTube.
+Se utiliza la librería <cite>pytube</cite> para realizar la descarga de los archivos.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="services.youtube.YouTubeDownloader.descargar_audio">
+<span class="sig-name descname"><span class="pre">descargar_audio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'downloads/'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/youtube.html#YouTubeDownloader.descargar_audio"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.youtube.YouTubeDownloader.descargar_audio" title="Link to this definition">¶</a></dt>
+<dd><p>Descarga solo el audio del video en formato mp4.</p>
+<p>Este método descarga el audio del video en el mejor formato de audio disponible
+y lo guarda en el directorio especificado.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="services.youtube.YouTubeDownloader.descargar_video">
+<span class="sig-name descname"><span class="pre">descargar_video</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'downloads/'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/youtube.html#YouTubeDownloader.descargar_video"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#services.youtube.YouTubeDownloader.descargar_video" title="Link to this definition">¶</a></dt>
+<dd><p>Descarga el video en la mejor resolución.</p>
+<p>Este método descarga el video completo en su mejor resolución disponible
+y lo guarda en el directorio especificado.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – La ruta donde se guardará el archivo descargado.
+Por defecto es “downloads/”.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-services">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-services" title="Link to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ChatBot Inteligente</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navegación</h3>
+<p class="caption" role="heading"><span class="caption-text">Contenido:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">services</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">services package</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">services</a><ul>
+      <li>Previous: <a href="modules.html" title="capítulo anterior">services</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/services.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

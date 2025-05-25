@@ -2,11 +2,16 @@ import re
 import sqlite3
 import bcrypt
 from utils.BD_utils import ejecutar_consulta, obtener_datos
+from utils.decorador import log_accion
+from utils.observador import evento_global
 
 DB_PATH = "chatbot.db"  # Ruta de la base de datos
 
-def validar_email(email):
-    """Verifica si el email tiene un formato válido.
+@log_accion("Validación de email")
+def validar_email(email: str) -> bool:
+    """
+    Verifica si el email tiene un formato válido.
+
     Args:
         email (str): Dirección de correo electrónico a validar.
 
@@ -19,8 +24,11 @@ def validar_email(email):
     print("⚠️ Error: El email no tiene un formato válido.")
     return False
 
+@log_accion("Registro de usuario")
 def registrar_usuario(nombre: str, email: str, password: str) -> bool:
-    """Registra un nuevo usuario con nombre, email y contraseña.
+    """
+    Registra un nuevo usuario con nombre, email y contraseña en la base de datos.
+
     Args:
         nombre (str): Nombre del usuario.
         email (str): Dirección de correo electrónico del usuario.
@@ -29,7 +37,6 @@ def registrar_usuario(nombre: str, email: str, password: str) -> bool:
     Returns:
         bool: True si el usuario se registró exitosamente, False si ocurrió un error.
     """
-    
     if not validar_email(email):
         return False
 
@@ -43,19 +50,27 @@ def registrar_usuario(nombre: str, email: str, password: str) -> bool:
         conn.close()
         return False
 
-    # Hashear la contraseña y almacenarla como string
+    # Hashear la contraseña
     password_hash = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
-    # Insertar usuario en la base de datos
-    cursor.execute("INSERT INTO usuarios (nombre, email, password_hash) VALUES (?, ?, ?)", (nombre, email, password_hash))
+    # Insertar usuario
+    cursor.execute(
+        "INSERT INTO usuarios (nombre, email, password_hash) VALUES (?, ?, ?)",
+        (nombre, email, password_hash)
+    )
     conn.commit()
     conn.close()
     print("✅ Usuario registrado exitosamente.")
+
+    # Notificar evento
+    evento_global.notificar(f"Usuario registrado: {email}")
     return True
 
+@log_accion("Inicio de sesión")
 def iniciar_sesion(email: str, password: str) -> int:
-    """Verifica credenciales de usuario y devuelve su ID si son correctas.
-    
+    """
+    Verifica credenciales del usuario y devuelve su ID si son correctas.
+
     Args:
         email (str): Dirección de correo electrónico del usuario.
         password (str): Contraseña proporcionada por el usuario.
@@ -63,7 +78,9 @@ def iniciar_sesion(email: str, password: str) -> int:
     Returns:
         int: ID del usuario autenticado si las credenciales son correctas, None en caso contrario.
     """
-    usuario = obtener_datos("SELECT id, password_hash FROM usuarios WHERE email = ?", (email,))
+    usuario = obtener_datos(
+        "SELECT id, password_hash FROM usuarios WHERE email = ?", (email,)
+    )
 
     if not usuario:
         print("⚠️ Error: El email no está registrado.")
@@ -71,34 +88,44 @@ def iniciar_sesion(email: str, password: str) -> int:
 
     user_id, password_hash = usuario[0]
     if bcrypt.checkpw(password.encode('utf-8'), password_hash.encode('utf-8')):
-        return user_id  # Devuelve el ID del usuario autenticado
+        # Notificar evento
+        evento_global.notificar(f"Inicio de sesión: {email}")
+        return user_id
     else:
         print("⚠️ Error: La contraseña es incorrecta.")
         return None
 
+@log_accion("Obtención de ID de usuario")
 def obtener_id_usuario(email: str) -> int:
-    """Obtiene el ID de un usuario a partir de su email.
-    
+    """
+    Obtiene el ID de un usuario a partir de su email.
+
     Args:
         email (str): Dirección de correo electrónico del usuario.
 
     Returns:
         int: ID del usuario si existe, None en caso contrario.
-
     """
     usuario = obtener_datos("SELECT id FROM usuarios WHERE email = ?", (email,))
     if usuario:
-        return usuario[0][0]  # Retorna el ID del usuario
+        return usuario[0][0]
     return None
 
-def modificar_usuario(user_id: int, nuevo_nombre: str = None, nuevo_email: str = None, nueva_password: str = None) -> bool:
-    """Modifica los datos de un usuario existente.
-    
+@log_accion("Modificación de usuario")
+def modificar_usuario(
+    user_id: int,
+    nuevo_nombre: str = None,
+    nuevo_email: str = None,
+    nueva_password: str = None
+) -> bool:
+    """
+    Modifica los datos de un usuario existente en la base de datos.
+
     Args:
         user_id (int): ID del usuario a modificar.
-        nuevo_nombre (str, opcional): Nuevo nombre para el usuario. Por defecto es None.
-        nuevo_email (str, opcional): Nuevo email para el usuario. Por defecto es None.
-        nueva_password (str, opcional): Nueva contraseña para el usuario. Por defecto es None.
+        nuevo_nombre (str, opcional): Nuevo nombre del usuario.
+        nuevo_email (str, opcional): Nuevo email del usuario.
+        nueva_password (str, opcional): Nueva contraseña del usuario.
 
     Returns:
         bool: True si la modificación fue exitosa, False si ocurrió un error.
@@ -120,20 +147,28 @@ def modificar_usuario(user_id: int, nuevo_nombre: str = None, nuevo_email: str =
             cursor.execute("UPDATE usuarios SET email = ? WHERE id = ?", (nuevo_email, user_id))
         if nueva_password:
             password_hash = bcrypt.hashpw(nueva_password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
-            cursor.execute("UPDATE usuarios SET password_hash = ? WHERE id = ?", (password_hash, user_id))
+            cursor.execute(
+                "UPDATE usuarios SET password_hash = ? WHERE id = ?",
+                (password_hash, user_id)
+            )
 
         conn.commit()
         conn.close()
         print("✅ Datos del usuario actualizados correctamente.")
+
+        # Notificar evento
+        evento_global.notificar(f"Usuario modificado: ID {user_id}")
         return True
     except sqlite3.Error as e:
         print(f"⚠️ Error al modificar el usuario: {e}")
         conn.close()
         return False
 
+@log_accion("Eliminación de usuario")
 def eliminar_usuario(user_id: int) -> bool:
-    """Elimina un usuario de la base de datos.
-    
+    """
+    Elimina un usuario de la base de datos.
+
     Args:
         user_id (int): ID del usuario a eliminar.
 
@@ -148,8 +183,12 @@ def eliminar_usuario(user_id: int) -> bool:
         conn.commit()
         conn.close()
         print("✅ Usuario eliminado correctamente.")
+
+        # Notificar evento
+        evento_global.notificar(f"Usuario eliminado: ID {user_id}")
         return True
     except sqlite3.Error as e:
         print(f"⚠️ Error al eliminar el usuario: {e}")
         conn.close()
         return False
+

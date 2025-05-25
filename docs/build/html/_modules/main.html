@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+
+<html lang="es" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>main &#8212; documentación de ChatBot Inteligente - 1.0</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <script src="../_static/documentation_options.js?v=4936afed"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/translations.js?v=f85f4cfb"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Código fuente para main</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">services.autenticacion</span><span class="w"> </span><span class="kn">import</span> <span class="n">iniciar_sesion</span><span class="p">,</span> <span class="n">registrar_usuario</span><span class="p">,</span> <span class="n">obtener_id_usuario</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">services.calendario</span><span class="w"> </span><span class="kn">import</span> <span class="n">GestorEventos</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">services.clima</span><span class="w"> </span><span class="kn">import</span> <span class="n">GestorClima</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">services.conversionMoneda</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConvertidorMoneda</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">services.recordatorios</span><span class="w"> </span><span class="kn">import</span> <span class="n">GestorRecordatorios</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">services.youtube</span><span class="w"> </span><span class="kn">import</span> <span class="n">YouTubeDownloader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">services.whatsapp</span><span class="w"> </span><span class="kn">import</span> <span class="n">WhatsappBot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">services.telegram</span><span class="w"> </span><span class="kn">import</span> <span class="n">TelegramBot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">services.discord</span><span class="w"> </span><span class="kn">import</span> <span class="n">DiscordBot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">services.chatbotIA</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatBot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">utils.BD_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">inicializar_bd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">utils.decorador</span><span class="w"> </span><span class="kn">import</span> <span class="n">log_accion</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">utils.observador</span><span class="w"> </span><span class="kn">import</span> <span class="n">evento_global</span>
+
+<span class="c1"># Cargar variables de entorno</span>
+<span class="n">load_dotenv</span><span class="p">()</span>
+
+<span class="c1"># Tokens y API Keys</span>
+<span class="n">TELEGRAM_TOKEN</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;TELEGRAM_TOKEN&quot;</span><span class="p">)</span>
+<span class="n">DISCORD_TOKEN</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;DISCORD_TOKEN&quot;</span><span class="p">)</span>
+<span class="n">WHATSAPP_SID</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;WHATSAPP_SID&quot;</span><span class="p">)</span>
+<span class="n">WHATSAPP_AUTH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;WHATSAPP_AUTH_TOKEN&quot;</span><span class="p">)</span>
+
+<span class="n">OPENAI_API_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;OPENAI_API_KEY&quot;</span><span class="p">)</span>
+<span class="n">OPENWEATHER_API_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;OPENWEATHER_API_KEY&quot;</span><span class="p">)</span>
+<span class="n">EXCHANGE_RATE_API_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;EXCHANGE_RATE_API_KEY&quot;</span><span class="p">)</span>
+
+<span class="c1"># Verificar claves esenciales</span>
+<span class="n">required</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;TELEGRAM_TOKEN&quot;</span><span class="p">:</span> <span class="n">TELEGRAM_TOKEN</span><span class="p">,</span>
+    <span class="s2">&quot;OPENAI_API_KEY&quot;</span><span class="p">:</span> <span class="n">OPENAI_API_KEY</span><span class="p">,</span>
+    <span class="s2">&quot;OPENWEATHER_API_KEY&quot;</span><span class="p">:</span> <span class="n">OPENWEATHER_API_KEY</span><span class="p">,</span>
+    <span class="s2">&quot;EXCHANGE_RATE_API_KEY&quot;</span><span class="p">:</span> <span class="n">EXCHANGE_RATE_API_KEY</span>
+<span class="p">}</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">required</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">val</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;⚠️ Advertencia: no se encontró la variable </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> en el entorno.&quot;</span><span class="p">)</span>
+
+<span class="c1"># Inicializar base de datos</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">inicializar_bd</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Base de datos inicializada correctamente.&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;⚠️ Error al inicializar la base de datos: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Instancias globales</span>
+<span class="n">recordatorios</span> <span class="o">=</span> <span class="n">GestorRecordatorios</span><span class="p">()</span>
+<span class="n">chatbot</span> <span class="o">=</span> <span class="n">ChatBot</span><span class="p">()</span>
+
+<span class="c1"># Función para inicializar bots con manejo de errores</span>
+<div class="viewcode-block" id="inicializar_bots">
+<a class="viewcode-back" href="../main.html#main.inicializar_bots">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">inicializar_bots</span><span class="p">():</span>
+    <span class="n">bots</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;whatsapp&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;telegram&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;discord&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">bots</span><span class="p">[</span><span class="s2">&quot;whatsapp&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">WhatsappBot</span><span class="p">(</span><span class="n">WHATSAPP_SID</span><span class="p">,</span> <span class="n">WHATSAPP_AUTH</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Bot de WhatsApp iniciado.&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;⚠️ Error al iniciar WhatsApp Bot: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">bots</span><span class="p">[</span><span class="s2">&quot;telegram&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">TelegramBot</span><span class="p">(</span><span class="n">TELEGRAM_TOKEN</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Bot de Telegram iniciado.&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;⚠️ Error al iniciar Telegram Bot: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">bots</span><span class="p">[</span><span class="s2">&quot;discord&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">DiscordBot</span><span class="p">(</span><span class="n">DISCORD_TOKEN</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Bot de Discord iniciado.&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;⚠️ Error al iniciar Discord Bot: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">bots</span></div>
+
+
+<span class="n">bots</span> <span class="o">=</span> <span class="n">inicializar_bots</span><span class="p">()</span>
+
+<span class="c1"># Autenticación y registro de usuario</span>
+<div class="viewcode-block" id="menu_autenticacion">
+<a class="viewcode-back" href="../main.html#main.menu_autenticacion">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">menu_autenticacion</span><span class="p">():</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🔐 Autenticación:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1️⃣ Iniciar sesión&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;2️⃣ Registrarse&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;3️⃣ Salir&quot;</span><span class="p">)</span>
+        <span class="n">opcion</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Elige una opción (1-3): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">opcion</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">autenticar_usuario_con_reintentos</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">user</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">user</span>
+        <span class="k">elif</span> <span class="n">opcion</span> <span class="o">==</span> <span class="s2">&quot;2&quot;</span><span class="p">:</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">registrar_usuario_manual</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">user</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">user</span>
+        <span class="k">elif</span> <span class="n">opcion</span> <span class="o">==</span> <span class="s2">&quot;3&quot;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;👋 Hasta pronto.&quot;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;⚠️ Opción no válida.&quot;</span><span class="p">)</span></div>
+
+
+<span class="c1"># Intentos de login</span>
+<div class="viewcode-block" id="autenticar_usuario_con_reintentos">
+<a class="viewcode-back" href="../main.html#main.autenticar_usuario_con_reintentos">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">autenticar_usuario_con_reintentos</span><span class="p">():</span>
+    <span class="n">intentos</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="k">while</span> <span class="n">intentos</span><span class="p">:</span>
+        <span class="n">email</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;📧 Email: &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">pwd</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;🔑 Contraseña: &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">user_id</span> <span class="o">=</span> <span class="n">iniciar_sesion</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">pwd</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">user_id</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;👋 ¡Bienvenido, usuario </span><span class="si">{</span><span class="n">user_id</span><span class="si">}</span><span class="s2">!&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">user_id</span>
+            <span class="n">intentos</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ Incorrecto. Intentos restantes: </span><span class="si">{</span><span class="n">intentos</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">intentos</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;⚠️ Error al iniciar sesión: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">intentos</span><span class="si">}</span><span class="s2"> restantes)&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🚫 Intentos agotados.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<span class="c1"># Registro manual</span>
+<div class="viewcode-block" id="registrar_usuario_manual">
+<a class="viewcode-back" href="../main.html#main.registrar_usuario_manual">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">registrar_usuario_manual</span><span class="p">():</span>
+    <span class="n">nombre</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;👤 Nombre: &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;📧 Email: &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="n">pwd</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;🔑 Contraseña: &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">registrar_usuario</span><span class="p">(</span><span class="n">nombre</span><span class="p">,</span> <span class="n">email</span><span class="p">,</span> <span class="n">pwd</span><span class="p">):</span>
+            <span class="n">user_id</span> <span class="o">=</span> <span class="n">obtener_id_usuario</span><span class="p">(</span><span class="n">email</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Registro exitoso. Inicia sesión.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">user_id</span>
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ Registro fallido: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<span class="c1"># Menú principal funciones</span>
+<div class="viewcode-block" id="mostrar_main_menu">
+<a class="viewcode-back" href="../main.html#main.mostrar_main_menu">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">mostrar_main_menu</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">📋 Menú principal:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1️⃣ Eventos en Google Calendar&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;2️⃣ Recordatorios&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;3️⃣ Clima&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;4️⃣ Conversión de moneda&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;5️⃣ YouTube Downloader&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;6️⃣ Chatbot IA&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;7️⃣ Bots de mensajería&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;8️⃣ Salir&quot;</span><span class="p">)</span></div>
+
+
+<span class="c1"># Gestión eventos con decorator logging\@</span>
+<div class="viewcode-block" id="gestionar_eventos_calendario">
+<a class="viewcode-back" href="../main.html#main.gestionar_eventos_calendario">[documentos]</a>
+<span class="nd">@log_accion</span><span class="p">(</span><span class="s2">&quot;Gestión de eventos&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">gestionar_eventos_calendario</span><span class="p">(</span><span class="n">gestor</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🗓️ Eventos:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;a) Crear</span><span class="se">\n</span><span class="s2">b) Listar</span><span class="se">\n</span><span class="s2">c) Eliminar&quot;</span><span class="p">)</span>
+    <span class="n">opt</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Elige (a-c): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">opt</span> <span class="o">==</span> <span class="s2">&quot;a&quot;</span><span class="p">:</span>
+        <span class="n">tit</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Título: &quot;</span><span class="p">)</span>
+        <span class="n">fh</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Fecha (YYYY-MM-DDTHH:MM:SS): &quot;</span><span class="p">)</span>
+        <span class="n">dur</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Duración (h): &quot;</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">gestor</span><span class="o">.</span><span class="n">crear_evento</span><span class="p">(</span><span class="n">tit</span><span class="p">,</span> <span class="n">fh</span><span class="p">,</span> <span class="n">dur</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">opt</span> <span class="o">==</span> <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">gestor</span><span class="o">.</span><span class="n">listar_eventos</span><span class="p">())</span>
+    <span class="k">elif</span> <span class="n">opt</span> <span class="o">==</span> <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">gestor</span><span class="o">.</span><span class="n">eliminar_evento</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;ID evento: &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()))</span>
+    <span class="k">else</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ Opción inválida.&quot;</span><span class="p">)</span></div>
+
+
+<span class="c1"># Gestión recordatorios</span>
+<div class="viewcode-block" id="gestionar_recordatorios">
+<a class="viewcode-back" href="../main.html#main.gestionar_recordatorios">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">gestionar_recordatorios</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">📅 Recordatorios:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1) Añadir</span><span class="se">\n</span><span class="s2">2) Listar</span><span class="se">\n</span><span class="s2">3) Eliminar&quot;</span><span class="p">)</span>
+    <span class="n">opt</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Elige (1-3): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">opt</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">recordatorios</span><span class="o">.</span><span class="n">crear_recordatorio</span><span class="p">(</span>
+            <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Descripción: &quot;</span><span class="p">),</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Fecha (YYYY-MM-DD HH:MM:SS): &quot;</span><span class="p">)))</span>
+    <span class="k">elif</span> <span class="n">opt</span> <span class="o">==</span> <span class="s2">&quot;2&quot;</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">recordatorios</span><span class="o">.</span><span class="n">listar_recordatorios</span><span class="p">())</span>
+    <span class="k">elif</span> <span class="n">opt</span> <span class="o">==</span> <span class="s2">&quot;3&quot;</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">recordatorios</span><span class="o">.</span><span class="n">eliminar_recordatorio</span><span class="p">(</span>
+                <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;ID a eliminar: &quot;</span><span class="p">))))</span>
+        <span class="k">except</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ ID inválido.&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;⚠️ Opción no válida.&quot;</span><span class="p">)</span></div>
+
+
+<span class="c1"># Gestión bots</span>
+<div class="viewcode-block" id="manejar_bots">
+<a class="viewcode-back" href="../main.html#main.manejar_bots">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">manejar_bots</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🤖 Bots:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1) WhatsApp</span><span class="se">\n</span><span class="s2">2) Telegram</span><span class="se">\n</span><span class="s2">3) Discord&quot;</span><span class="p">)</span>
+    <span class="n">opt</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Elige (1-3): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">opt</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span> <span class="ow">and</span> <span class="n">bots</span><span class="p">[</span><span class="s2">&quot;whatsapp&quot;</span><span class="p">]:</span>
+        <span class="n">bots</span><span class="p">[</span><span class="s2">&quot;whatsapp&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">enviar_mensaje</span><span class="p">(</span>
+            <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Número destino: &quot;</span><span class="p">),</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Mensaje: &quot;</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">opt</span> <span class="o">==</span> <span class="s2">&quot;2&quot;</span> <span class="ow">and</span> <span class="n">bots</span><span class="p">[</span><span class="s2">&quot;telegram&quot;</span><span class="p">]:</span>
+        <span class="n">bots</span><span class="p">[</span><span class="s2">&quot;telegram&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">enviar_mensaje</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Mensaje: &quot;</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">opt</span> <span class="o">==</span> <span class="s2">&quot;3&quot;</span> <span class="ow">and</span> <span class="n">bots</span><span class="p">[</span><span class="s2">&quot;discord&quot;</span><span class="p">]:</span>
+        <span class="n">bots</span><span class="p">[</span><span class="s2">&quot;discord&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">enviar_mensaje</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Mensaje: &quot;</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;⚠️ Bot no disponible o inválido.&quot;</span><span class="p">)</span></div>
+
+
+<span class="c1"># Main loop</span>
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../main.html#main.main">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="n">menu_autenticacion</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">user_id</span><span class="p">:</span> <span class="k">return</span>
+    <span class="n">gestor_cal</span> <span class="o">=</span> <span class="n">GestorEventos</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+    <span class="n">gestor_cli</span> <span class="o">=</span> <span class="n">GestorClima</span><span class="p">()</span>
+    <span class="n">gestor_conv</span> <span class="o">=</span> <span class="n">ConvertidorMoneda</span><span class="p">()</span>
+    <span class="n">yt_down</span> <span class="o">=</span> <span class="n">YouTubeDownloader</span><span class="p">()</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">mostrar_main_menu</span><span class="p">()</span>
+        <span class="n">sel</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Opción (1-8): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">sel</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span> <span class="n">gestionar_eventos_calendario</span><span class="p">(</span><span class="n">gestor_cal</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">sel</span> <span class="o">==</span> <span class="s2">&quot;2&quot;</span><span class="p">:</span> <span class="n">gestionar_recordatorios</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">sel</span> <span class="o">==</span> <span class="s2">&quot;3&quot;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">gestor_cli</span><span class="o">.</span><span class="n">obtener_clima</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Ciudad: &quot;</span><span class="p">)))</span>
+        <span class="k">elif</span> <span class="n">sel</span> <span class="o">==</span> <span class="s2">&quot;4&quot;</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">gestor_conv</span><span class="o">.</span><span class="n">convertir_moneda</span><span class="p">(</span>
+                <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Monto: &quot;</span><span class="p">)),</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;De: &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span>
+                <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;A: &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()))</span>
+        <span class="k">elif</span> <span class="n">sel</span> <span class="o">==</span> <span class="s2">&quot;5&quot;</span><span class="p">:</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;YouTube URL: &quot;</span><span class="p">)</span>
+            <span class="n">fmt</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Formato (mp4/mp3): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="n">func</span> <span class="o">=</span> <span class="n">yt_down</span><span class="o">.</span><span class="n">descargar_video</span> <span class="k">if</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s2">&quot;mp4&quot;</span> <span class="k">else</span> <span class="n">yt_down</span><span class="o">.</span><span class="n">descargar_audio</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="n">url</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">sel</span> <span class="o">==</span> <span class="s2">&quot;6&quot;</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">chatbot</span><span class="o">.</span><span class="n">responder</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Preguntar IA: &quot;</span><span class="p">)))</span>
+        <span class="k">elif</span> <span class="n">sel</span> <span class="o">==</span> <span class="s2">&quot;7&quot;</span><span class="p">:</span> <span class="n">manejar_bots</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">sel</span> <span class="o">==</span> <span class="s2">&quot;8&quot;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;👋 Adiós.&quot;</span><span class="p">)</span>
+            <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;⚠️ Opción no válida.&quot;</span><span class="p">)</span>
+        <span class="n">evento_global</span><span class="o">.</span><span class="n">notificar</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Usuario </span><span class="si">{</span><span class="n">user_id</span><span class="si">}</span><span class="s2"> eligió </span><span class="si">{</span><span class="n">sel</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">ChatBot Inteligente</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navegación</h3>
+<p class="caption" role="heading"><span class="caption-text">Contenido:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">ChatBot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils.html">utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ChatBot.db.html">ChatBot.db namespace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ChatBot.docs.html">ChatBot.docs namespace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ChatBot.docs.source.html">ChatBot.docs.source namespace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ChatBot.html">ChatBot namespace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ChatBot.services.html">ChatBot.services package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ChatBot.servidor_log.html">ChatBot.servidor_log namespace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ChatBot.utils.html">ChatBot.utils package</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Código de módulo</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

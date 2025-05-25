@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+
+<html lang="es" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>services.clima &#8212; documentación de ChatBot Inteligente - 1.0</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <script src="../../_static/documentation_options.js?v=4936afed"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/translations.js?v=f85f4cfb"></script>
+    <link rel="index" title="Índice" href="../../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Código fuente para services.clima</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">utils.validaciones</span><span class="w"> </span><span class="kn">import</span> <span class="n">validar_nombre_ciudad</span>
+
+<div class="viewcode-block" id="GestorClima">
+<a class="viewcode-back" href="../../services.html#services.clima.GestorClima">[documentos]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">GestorClima</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Clase para obtener información meteorológica de una ciudad utilizando OpenWeather API.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">API_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;OPENWEATHER_API_KEY&quot;</span><span class="p">)</span>  <span class="c1"># Obtener clave desde variables de entorno</span>
+    <span class="n">BASE_URL</span> <span class="o">=</span> <span class="s2">&quot;http://api.openweathermap.org/data/2.5/weather&quot;</span>
+
+<div class="viewcode-block" id="GestorClima.obtener_clima">
+<a class="viewcode-back" href="../../services.html#services.clima.GestorClima.obtener_clima">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">obtener_clima</span><span class="p">(</span><span class="n">ciudad</span><span class="p">,</span> <span class="n">unidades</span><span class="o">=</span><span class="s2">&quot;metric&quot;</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;es&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Obtiene el clima de una ciudad usando la API de OpenWeather.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            ciudad (str): Nombre de la ciudad.</span>
+<span class="sd">            unidades (str): Sistema de unidades (&#39;metric&#39;, &#39;imperial&#39;, &#39;standard&#39;).</span>
+<span class="sd">            lang (str): Idioma de la respuesta (&#39;es&#39;, &#39;en&#39;, etc.).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">validar_nombre_ciudad</span><span class="p">(</span><span class="n">ciudad</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s2">&quot;Error: Nombre de ciudad inválido.&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">GestorClima</span><span class="o">.</span><span class="n">API_KEY</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Error: Falta la clave API. Configura OPENWEATHER_API_KEY en variables de entorno.&quot;</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;q&quot;</span><span class="p">:</span> <span class="n">ciudad</span><span class="p">,</span>
+                <span class="s2">&quot;appid&quot;</span><span class="p">:</span> <span class="n">GestorClima</span><span class="o">.</span><span class="n">API_KEY</span><span class="p">,</span>
+                <span class="s2">&quot;units&quot;</span><span class="p">:</span> <span class="n">unidades</span><span class="p">,</span>
+                <span class="s2">&quot;lang&quot;</span><span class="p">:</span> <span class="n">lang</span>
+            <span class="p">}</span>
+            <span class="n">respuesta</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">GestorClima</span><span class="o">.</span><span class="n">BASE_URL</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+            <span class="n">respuesta</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>  <span class="c1"># Lanza error si la respuesta es incorrecta</span>
+
+            <span class="n">datos</span> <span class="o">=</span> <span class="n">respuesta</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+            <span class="n">temp</span> <span class="o">=</span> <span class="n">datos</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;main&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;temp&quot;</span><span class="p">)</span>
+            <span class="n">clima</span> <span class="o">=</span> <span class="n">datos</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;weather&quot;</span><span class="p">,</span> <span class="p">[{}])[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;description&quot;</span><span class="p">,</span> <span class="s2">&quot;No disponible&quot;</span><span class="p">)</span>
+            <span class="n">humedad</span> <span class="o">=</span> <span class="n">datos</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;main&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;humidity&quot;</span><span class="p">,</span> <span class="s2">&quot;No disponible&quot;</span><span class="p">)</span>
+            <span class="n">viento</span> <span class="o">=</span> <span class="n">datos</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;wind&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;speed&quot;</span><span class="p">,</span> <span class="s2">&quot;No disponible&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">unidades</span> <span class="o">==</span> <span class="s2">&quot;metric&quot;</span><span class="p">:</span>
+                <span class="n">viento_kmh</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">viento</span> <span class="o">*</span> <span class="mf">3.6</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+                <span class="n">viento_info</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">viento_kmh</span><span class="si">}</span><span class="s2"> km/h&quot;</span>
+            <span class="k">elif</span> <span class="n">unidades</span> <span class="o">==</span> <span class="s2">&quot;imperial&quot;</span><span class="p">:</span>
+                <span class="n">viento_info</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">viento</span><span class="si">}</span><span class="s2"> mph&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">viento_info</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">viento</span><span class="si">}</span><span class="s2"> m/s&quot;</span>
+
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;🌤️ Clima en </span><span class="si">{</span><span class="n">ciudad</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2">:</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;- 🌡️ Temperatura: </span><span class="si">{</span><span class="n">temp</span><span class="si">}</span><span class="s2">°C</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;- ☁️ Condiciones: </span><span class="si">{</span><span class="n">clima</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;- 💧 Humedad: </span><span class="si">{</span><span class="n">humedad</span><span class="si">}</span><span class="s2">%</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;- 💨 Viento: </span><span class="si">{</span><span class="n">viento_info</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">RequestException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Error de conexión con la API: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">KeyError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s2">&quot;Error: No se pudo procesar la respuesta de la API.&quot;</span></div>
+</div>
+
+
+
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">ChatBot Inteligente</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navegación</h3>
+<p class="caption" role="heading"><span class="caption-text">Contenido:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">ChatBot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../utils.html">utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ChatBot.db.html">ChatBot.db namespace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ChatBot.docs.html">ChatBot.docs namespace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ChatBot.docs.source.html">ChatBot.docs.source namespace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ChatBot.html">ChatBot namespace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ChatBot.services.html">ChatBot.services package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ChatBot.servidor_log.html">ChatBot.servidor_log namespace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ChatBot.utils.html">ChatBot.utils package</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Código de módulo</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

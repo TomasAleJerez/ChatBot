@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+
+<html lang="es" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>utils package &#8212; documentación de ChatBot Inteligente - 1.0</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=4936afed"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/translations.js?v=f85f4cfb"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Búsqueda" href="search.html" />
+    <link rel="next" title="ChatBot.docs namespace" href="ChatBot.docs.html" />
+    <link rel="prev" title="ChatBot.utils package" href="ChatBot.utils.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="utils-package">
+<h1>utils package<a class="headerlink" href="#utils-package" title="Link to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-utils.BD_utils">
+<span id="utils-bd-utils-module"></span><h2>utils.BD_utils module<a class="headerlink" href="#module-utils.BD_utils" title="Link to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.BD_utils.agregar_evento">
+<span class="sig-prename descclassname"><span class="pre">utils.BD_utils.</span></span><span class="sig-name descname"><span class="pre">agregar_evento</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">titulo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fecha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descripcion</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/BD_utils.html#agregar_evento"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#utils.BD_utils.agregar_evento" title="Link to this definition">¶</a></dt>
+<dd><p>Agrega un evento a la base de datos.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.BD_utils.alta_usuario">
+<span class="sig-prename descclassname"><span class="pre">utils.BD_utils.</span></span><span class="sig-name descname"><span class="pre">alta_usuario</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nombre</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">email</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/BD_utils.html#alta_usuario"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#utils.BD_utils.alta_usuario" title="Link to this definition">¶</a></dt>
+<dd><p>Registra un nuevo usuario con su contraseña encriptada.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.BD_utils.autenticar_usuario">
+<span class="sig-prename descclassname"><span class="pre">utils.BD_utils.</span></span><span class="sig-name descname"><span class="pre">autenticar_usuario</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/BD_utils.html#autenticar_usuario"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#utils.BD_utils.autenticar_usuario" title="Link to this definition">¶</a></dt>
+<dd><p>Verifica las credenciales del usuario.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.BD_utils.ejecutar_consulta">
+<span class="sig-prename descclassname"><span class="pre">utils.BD_utils.</span></span><span class="sig-name descname"><span class="pre">ejecutar_consulta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/BD_utils.html#ejecutar_consulta"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#utils.BD_utils.ejecutar_consulta" title="Link to this definition">¶</a></dt>
+<dd><p>Ejecuta una consulta SQL en la base de datos.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.BD_utils.eliminar_evento">
+<span class="sig-prename descclassname"><span class="pre">utils.BD_utils.</span></span><span class="sig-name descname"><span class="pre">eliminar_evento</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">evento_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/BD_utils.html#eliminar_evento"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#utils.BD_utils.eliminar_evento" title="Link to this definition">¶</a></dt>
+<dd><p>Elimina un evento de la base de datos.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.BD_utils.eliminar_usuario">
+<span class="sig-prename descclassname"><span class="pre">utils.BD_utils.</span></span><span class="sig-name descname"><span class="pre">eliminar_usuario</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_usuario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/BD_utils.html#eliminar_usuario"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#utils.BD_utils.eliminar_usuario" title="Link to this definition">¶</a></dt>
+<dd><p>Elimina un usuario de la base de datos.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.BD_utils.inicializar_bd">
+<span class="sig-prename descclassname"><span class="pre">utils.BD_utils.</span></span><span class="sig-name descname"><span class="pre">inicializar_bd</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/BD_utils.html#inicializar_bd"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#utils.BD_utils.inicializar_bd" title="Link to this definition">¶</a></dt>
+<dd><p>Crea la base de datos y las tablas necesarias si no existen.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.BD_utils.modificar_evento">
+<span class="sig-prename descclassname"><span class="pre">utils.BD_utils.</span></span><span class="sig-name descname"><span class="pre">modificar_evento</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">evento_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nuevo_titulo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nueva_fecha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nueva_descripcion</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/BD_utils.html#modificar_evento"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#utils.BD_utils.modificar_evento" title="Link to this definition">¶</a></dt>
+<dd><p>Modifica un evento en la base de datos.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.BD_utils.modificar_usuario">
+<span class="sig-prename descclassname"><span class="pre">utils.BD_utils.</span></span><span class="sig-name descname"><span class="pre">modificar_usuario</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_usuario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nuevo_nombre</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nuevo_email</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nueva_password</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/BD_utils.html#modificar_usuario"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#utils.BD_utils.modificar_usuario" title="Link to this definition">¶</a></dt>
+<dd><p>Modifica los datos de un usuario existente.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.BD_utils.obtener_conexion">
+<span class="sig-prename descclassname"><span class="pre">utils.BD_utils.</span></span><span class="sig-name descname"><span class="pre">obtener_conexion</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/BD_utils.html#obtener_conexion"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#utils.BD_utils.obtener_conexion" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.BD_utils.obtener_datos">
+<span class="sig-prename descclassname"><span class="pre">utils.BD_utils.</span></span><span class="sig-name descname"><span class="pre">obtener_datos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/BD_utils.html#obtener_datos"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#utils.BD_utils.obtener_datos" title="Link to this definition">¶</a></dt>
+<dd><p>Obtiene datos de la base de datos.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.BD_utils.obtener_eventos">
+<span class="sig-prename descclassname"><span class="pre">utils.BD_utils.</span></span><span class="sig-name descname"><span class="pre">obtener_eventos</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/BD_utils.html#obtener_eventos"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#utils.BD_utils.obtener_eventos" title="Link to this definition">¶</a></dt>
+<dd><p>Obtiene todos los eventos de la base de datos.</p>
+</dd></dl>
+
+</section>
+<section id="module-utils.config">
+<span id="utils-config-module"></span><h2>utils.config module<a class="headerlink" href="#module-utils.config" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-utils.decorador">
+<span id="utils-decorador-module"></span><h2>utils.decorador module<a class="headerlink" href="#module-utils.decorador" title="Link to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.decorador.log_accion">
+<span class="sig-prename descclassname"><span class="pre">utils.decorador.</span></span><span class="sig-name descname"><span class="pre">log_accion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">accion</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/decorador.html#log_accion"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#utils.decorador.log_accion" title="Link to this definition">¶</a></dt>
+<dd><p>Decorador que registra la llamada y resultado de una función, enviándolo al servidor de logs.</p>
+</dd></dl>
+
+</section>
+<section id="module-utils.observador">
+<span id="utils-observador-module"></span><h2>utils.observador module<a class="headerlink" href="#module-utils.observador" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.observador.Observable">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.observador.</span></span><span class="sig-name descname"><span class="pre">Observable</span></span><a class="reference internal" href="_modules/utils/observador.html#Observable"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#utils.observador.Observable" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Implementa el patrón Observador: permite suscribir observadores y notificarles eventos.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.observador.Observable.agregar_observador">
+<span class="sig-name descname"><span class="pre">agregar_observador</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">observador</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/observador.html#Observable.agregar_observador"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#utils.observador.Observable.agregar_observador" title="Link to this definition">¶</a></dt>
+<dd><p>Agrega un observador a la lista.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>observador</strong> (<em>Observer</em>) – Instancia que implementa el método <cite>actualizar</cite>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.observador.Observable.notificar">
+<span class="sig-name descname"><span class="pre">notificar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mensaje</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/observador.html#Observable.notificar"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#utils.observador.Observable.notificar" title="Link to this definition">¶</a></dt>
+<dd><p>Envía un mensaje a todos los observadores registrados.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mensaje</strong> (<em>str</em>) – Información o log a distribuir.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.observador.ObservadorLog">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.observador.</span></span><span class="sig-name descname"><span class="pre">ObservadorLog</span></span><a class="reference internal" href="_modules/utils/observador.html#ObservadorLog"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#utils.observador.ObservadorLog" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Observador que imprime en consola los mensajes de log recibidos.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.observador.ObservadorLog.actualizar">
+<span class="sig-name descname"><span class="pre">actualizar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mensaje</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/observador.html#ObservadorLog.actualizar"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#utils.observador.ObservadorLog.actualizar" title="Link to this definition">¶</a></dt>
+<dd><p>Método llamado cuando el Observable notifica un mensaje.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mensaje</strong> (<em>str</em>) – Mensaje de log o evento.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-utils.validaciones">
+<span id="utils-validaciones-module"></span><h2>utils.validaciones module<a class="headerlink" href="#module-utils.validaciones" title="Link to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.validaciones.validar_codigo_moneda">
+<span class="sig-prename descclassname"><span class="pre">utils.validaciones.</span></span><span class="sig-name descname"><span class="pre">validar_codigo_moneda</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">moneda</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/validaciones.html#validar_codigo_moneda"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#utils.validaciones.validar_codigo_moneda" title="Link to this definition">¶</a></dt>
+<dd><p>Verifica si el código de moneda ingresado es válido.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>moneda</strong> (<em>str</em>) – Código de la moneda (ej. «USD», «EUR»).</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>True si es válido, False si no lo es.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.validaciones.validar_email">
+<span class="sig-prename descclassname"><span class="pre">utils.validaciones.</span></span><span class="sig-name descname"><span class="pre">validar_email</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/validaciones.html#validar_email"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#utils.validaciones.validar_email" title="Link to this definition">¶</a></dt>
+<dd><p>Valida si un email tiene el formato correcto.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.validaciones.validar_fecha">
+<span class="sig-prename descclassname"><span class="pre">utils.validaciones.</span></span><span class="sig-name descname"><span class="pre">validar_fecha</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fecha</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/validaciones.html#validar_fecha"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#utils.validaciones.validar_fecha" title="Link to this definition">¶</a></dt>
+<dd><p>Valida si una fecha está en el formato correcto “YYYY-MM-DD HH:MM:SS”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fecha</strong> (<em>str</em>) – Fecha a validar.</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>True si es válida, False si no lo es.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.validaciones.validar_nombre_ciudad">
+<span class="sig-prename descclassname"><span class="pre">utils.validaciones.</span></span><span class="sig-name descname"><span class="pre">validar_nombre_ciudad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ciudad</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/validaciones.html#validar_nombre_ciudad"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#utils.validaciones.validar_nombre_ciudad" title="Link to this definition">¶</a></dt>
+<dd><p>Valida que el nombre de la ciudad solo contenga letras y espacios.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ciudad</strong> (<em>str</em>) – Nombre de la ciudad ingresado por el usuario.</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>True si es válido, False si contiene caracteres no permitidos.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-utils">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-utils" title="Link to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ChatBot Inteligente</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navegación</h3>
+<p class="caption" role="heading"><span class="caption-text">Contenido:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="modules.html">ChatBot</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">utils package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-utils.BD_utils">utils.BD_utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-utils.config">utils.config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-utils.decorador">utils.decorador module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-utils.observador">utils.observador module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-utils.validaciones">utils.validaciones module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-utils">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ChatBot.db.html">ChatBot.db namespace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ChatBot.docs.html">ChatBot.docs namespace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ChatBot.docs.source.html">ChatBot.docs.source namespace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ChatBot.html">ChatBot namespace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ChatBot.services.html">ChatBot.services package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ChatBot.servidor_log.html">ChatBot.servidor_log namespace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ChatBot.utils.html">ChatBot.utils package</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="ChatBot.utils.html" title="capítulo anterior">ChatBot.utils package</a></li>
+      <li>Next: <a href="ChatBot.docs.html" title="próximo capítulo">ChatBot.docs namespace</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/utils.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
