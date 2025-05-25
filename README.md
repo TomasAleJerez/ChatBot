@@ -1,75 +1,81 @@
-# Asistente Virtual
+# 🤖 ChatBot Multiplataforma en Python
 
-Este proyecto es un Asistente Virtual modular y extensible que utiliza múltiples APIs y servicios en la nube para interactuar con el usuario a través de diferentes plataformas como WhatsApp, Telegram y Discord.
+Este proyecto es un **ChatBot multiplataforma en Python**, con integración a múltiples servicios como Telegram, WhatsApp, Discord, YouTube, Google Calendar, clima, conversión de monedas, recordatorios, y más. Está estructurado con el patrón **Modelo-Vista-Controlador (MVC)**, documentado con **Sphinx**, y soporta extensibilidad mediante decoradores, patrón observador y un servidor de logs.
 
-📌 Funcionalidades
+---
 
-Autenticación de Usuarios: Registro e inicio de sesión con almacenamiento seguro de contraseñas usando bcrypt.
+## 📁 Estructura del Proyecto
+ChatBot/
+├── main.py # Archivo principal del bot
+├── BD.py # Conexión a base de datos
+├── requirements.txt # Dependencias del proyecto
+├── README.md # Este archivo
+│
+├── Modulos/ # Lógica de cada funcionalidad
+│ ├── calendario.py
+│ ├── clima.py
+│ ├── conversionMoneda.py
+│ ├── recordatorios.py
+│ ├── youtube.py
+│ ├── whatsapp.py
+│ ├── telegram_bot.py
+│ ├── discord_bot.py
+│ ├── ia.py
+│ └── autenticacion.py
+│
+├── utils/ # Funciones auxiliares
+│ ├── validaciones.py
+│ ├── notificaciones.py
+│ ├── decorador.py
+│ ├── observador.py
+│ └── servidor_log.py
+│
+└── docs/ # Documentación con Sphinx
+├── source/
+│ ├── index.rst
+│ ├── conf.py
+│ └── *.rst (archivos generados por autodoc)
+└── build/
+└── html/ (salida HTML generada)
 
-Gestión de Eventos: Creación, eliminación y listado de eventos en Google Calendar.
+## 🚀 Funcionalidades
 
-Consultas Climáticas: Información actualizada sobre el clima en cualquier ciudad.
+- ✅ **Soporte para múltiples plataformas**: Telegram, WhatsApp, Discord.
+- 📅 **Integración con Google Calendar**.
+- 🌤️ **Consulta de clima**.
+- 💱 **Conversión de monedas** con tasas actualizadas.
+- ⏰ **Recordatorios personalizados**.
+- 📥 **Descarga de videos o audio desde YouTube**.
+- 🧠 **Respuestas inteligentes vía módulo IA (OpenAI)**.
+- 🛠️ Decoradores personalizados y patrón observador para modularidad.
+- 📝 Servidor de logging para control y depuración.
 
-Conversión de Monedas: Conversión entre diferentes divisas utilizando APIs externas.
+---
 
-Recordatorios: Creación, listado y eliminación de recordatorios almacenados en una base de datos SQLite.
+## 🧰 Requisitos
 
-Descarga de Videos/Audio de YouTube: Descarga de videos o audio en formato MP4/MP3.
+- Python 3.10 o superior
+- Tener activado `venv` o entorno virtual
+- Tener configuradas las API Keys necesarias para:
+  - Telegram
+  - WhatsApp (Twilio u otra)
+  - Google Calendar
+  - YouTube
+  - APIs de Clima y Monedas
+- Dependencias especificadas en `requirements.txt`
 
-Integración con Bots: Control y gestión de mensajes en plataformas como WhatsApp, Telegram y Discord.
+---
 
-ChatBot IA: Respuestas inteligentes usando modelos de IA.
+## ⚙️ Instalación
 
-💾 Requisitos
+```bash
+# Clonar el repositorio
+git clone https://github.com/tuusuario/chatbot.git
+cd ChatBot
 
-Python 3.12.9
+# Crear entorno virtual
+python -m venv venv
+venv\Scripts\activate  # En Windows
 
-Librerías externas listadas en requirements.txt
-
-Instalación de dependencias:
-
+# Instalar dependencias
 pip install -r requirements.txt
-
-
-🔐 Configuración
-
-1. Clona el repositorio y navega al directorio.
-
-2. Crea un archivo .env en la raíz del proyecto con las variables necesarias:
-
-TELEGRAM_TOKEN=...
-DISCORD_TOKEN=...
-WHATSAPP_SID=...
-WHATSAPP_AUTH_TOKEN=...
-
-3. Configura tus credenciales de Google API para Google Calendar y guarda el archivo credentials.json en la raíz del proyecto.
-
-🚀 Uso
-
-Ejecuta la aplicación con:
-
-python main.py
-
-El programa mostrará un menú interactivo en la consola para seleccionar las diferentes funcionalidades disponibles.
-
-📖 Documentación
-
-Este proyecto utiliza Sphinx para generar documentación. Para generarla:
-
-Entra en el directorio docs/.
-
-Ejecuta el comando:
-
-make html
-
-La documentación se generará en la carpeta docs/_build/html/.
-
-🔧 Características Futuras
-
-Mejora del manejo de múltiples usuarios.
-
-Implementación de una interfaz gráfica.
-
-Soporte para nuevas plataformas de bots.
-
-
